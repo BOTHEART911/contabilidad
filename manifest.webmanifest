@@ -1,0 +1,36 @@
+{
+  "id": "/contabilidad/",
+  "name": "CONTABILIDAD",
+  "short_name": "CONTABILIDAD",
+  "start_url": "/contabilidad/",
+  "scope": "/contabilidad/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#06402B",
+  "capture_links": "existing-client-navigate",
+  "launch_handler": { "client_mode": "navigate-existing" },
+
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://botheart911.github.io//contabilidad//manifest.webmanifest",
+      "id": "/contabilidad/"
+    }
+  ],
+
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dqqeavica/image/upload/v1766609125/contratacion_uuoyf7.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://res.cloudinary.com/dqqeavica/image/upload/v1766609125/contratacion_uuoyf7.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
