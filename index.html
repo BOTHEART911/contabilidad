@@ -493,7 +493,7 @@
       <div class="card narrow" style="text-align:center;">
         <h2 style="color:var(--primary);">APP CONTABILIDAD</h2>
         <img class="brand" alt="Instalar" src="https://res.cloudinary.com/dqqeavica/image/upload/v1766349498/slider_zcq18s.gif" />
-        <p style="font-weight:600;">Herramienta de uso exclusivo para el equipo de Contratación de la Alcaldía de Flandes</p>
+        <p style="font-weight:600;">Herramienta de uso exclusivo para el equipo de Contabilidad de la Alcaldía de Flandes</p>
         <div class="btn-row" style="justify-content:center; margin-top:12px;">
           <button id="btn-instalar" class="btn-primary" style="display:none;">Instalar la App 📲</button>
         </div>
@@ -551,7 +551,7 @@
 
         <div class="btn-row spaced">
           <button id="go-contratistas" class="btn-primary">CONTRATISTAS</button>
-          <button id="go-revision" class="btn-primary">REVISAR CUENTAS</button>
+          <button id="go-revision" class="btn-primary">ORDEN DE PAGO</button>
           <button id="go-requerimientos" class="btn-primary">REQUERIMIENTO</button>
           <button id="go-comunicados" class="btn-primary">COMUNICADOS</button>
           <button id="go-soporte" class="btn-primary">SOPORTE</button>
@@ -597,7 +597,7 @@
     <!-- VISTA REVISIÓN DE CUENTAS -->
     <section id="view-revision" class="view">
       <div class="card">
-        <h2 style="color:var(--primary)">REVISIÓN DE CUENTAS</h2>
+        <h2 style="color:var(--primary)">CUENTAS PENDIENTES DE ORDEN PAGO</h2>
 
         <div class="center">
           <div id="cuentas-count" class="tag-count" style="display:none;"></div>
@@ -978,7 +978,7 @@ document.getElementById('go-revision').addEventListener('click', async ()=>{
     await Swal.fire({
       icon:'success',
       title:'¡Estás al día!',
-      text:'No tienes CUENTAS pendientes por revisar y aprobar',
+      text:'No tienes CUENTAS pendientes por Orden de Pago',
       timer: 3200,
       showConfirmButton: false
     });
@@ -1248,7 +1248,7 @@ function pintarCuentas(list){
     btnRow.className='btn-row';
 
     const btnRevisar=document.createElement('button');
-btnRevisar.textContent='REVISAR';
+btnRevisar.textContent='INICIAR';
 btnRevisar.addEventListener('click', ()=>{
   playSoundOnce(SOUNDS.login);
   abrirRevisionCuenta(c.documento);
@@ -1627,7 +1627,7 @@ const nombre = (MODAL_TARGET.nombre || '').trim();
 const mensaje = 
   'Estimado(a) *' + nombre + '*\n\n' +
   'Tenemos el siguiente requerimiento:\n\n*' + txt + '*\n\n' +
-  'Cordialmente,\n\n*Equipo de Contratación*\n> Alcaldía de Flandes';
+  'Cordialmente,\n\n*Equipo de Contabilidad*\n> Alcaldía de Flandes';
 
 if (telefonoNormalizado){
   sendBuilderbotMessage(telefonoNormalizado, mensaje);
