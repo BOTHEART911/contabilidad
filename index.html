@@ -1131,11 +1131,22 @@ btnDetalles.addEventListener('click', ()=>{
 } 
 
 document.getElementById('contr-filter').addEventListener('input',()=>{
-  const q=document.getElementById('contr-filter').value.trim().toLowerCase();
-  const filtered=CONTR_DATA.filter(c=>{
-    return [c.nombre,c.documento,c.secretaria,c.supervisor,c.telefono]
-      .some(v=>String(v||'').toLowerCase().includes(q));
+  const qRaw = document.getElementById('contr-filter').value.trim().toLowerCase();
+  const digits = qRaw.replace(/\D/g,'');
+  const buscarDocumento = digits.length >= 5;
+
+  const filtered = CONTR_DATA.filter(c=>{
+    const base = [c.nombre,c.secretaria,c.supervisor,c.telefono,c.contrato]
+      .some(v=>String(v||'').toLowerCase().includes(qRaw));
+
+    if(base) return true;
+
+    if(buscarDocumento){
+      return String(c.documento||'').toLowerCase().includes(qRaw);
+    }
+    return false;
   });
+
   pintarContratistas(filtered);
   actualizarResumenContratistas(filtered);
 });
@@ -1240,6 +1251,10 @@ function pintarCuentas(list){
     pDoc.className='item-sub';
     pDoc.textContent='CC / NIT: '+(c.documento||'');
 
+    const pContrato=document.createElement('p');
+    pContrato.className='item-sub';
+    pContrato.textContent='CONTRATO: '+(c.contrato||'');
+
     const pInf=document.createElement('p');
     pInf.className='item-sub';
     pInf.textContent='INFORME: '+(c.informe||'')+' de: '+(c.totalInformes||'');
@@ -1274,17 +1289,29 @@ btnRevisar.addEventListener('click', ()=>{
 
     div.appendChild(header);
     div.appendChild(pDoc);
+    div.appendChild(pContrato);
     div.appendChild(pInf);
     div.appendChild(btnRow);
     wrap.appendChild(div);
   }
 }
 document.getElementById('cuentas-filter').addEventListener('input',()=>{
-  const q=document.getElementById('cuentas-filter').value.trim().toLowerCase();
-  const filtered=CUENTAS_DATA.filter(c=>{
-    return [c.nombre,c.documento,c.informe,c.totalInformes]
-      .some(v=>String(v||'').toLowerCase().includes(q));
+  const qRaw = document.getElementById('cuentas-filter').value.trim().toLowerCase();
+  const digits = qRaw.replace(/\D/g,'');
+  const buscarDocumento = digits.length >= 5;
+
+  const filtered = CUENTAS_DATA.filter(c=>{
+    const base = [c.nombre,c.informe,c.totalInformes,c.contrato]
+      .some(v=>String(v||'').toLowerCase().includes(qRaw));
+
+    if(base) return true;
+
+    if(buscarDocumento){
+      return String(c.documento||'').toLowerCase().includes(qRaw);
+    }
+    return false;
   });
+
   pintarCuentas(filtered);
   actualizarResumenCuentas(filtered);
 });
