@@ -336,6 +336,28 @@
   @media (max-width:400px){
     .contr-actions .left-group > button{ flex: 1 1 100%; }
   }
+
+    /* === NUEVO: layout del header en tarjetas de ORDENES para que la carpeta NO desacomode === */
+.item-header.orden-header{
+  display:flex;
+  align-items:flex-start;        /* como tu referencia: icono arriba a la derecha */
+  justify-content:space-between;
+  gap:10px;
+}
+.item-header.orden-header .item-title{
+  flex:1 1 auto;
+  min-width:0;
+}
+.item-header.orden-header .orden-folder{
+  flex:0 0 auto;
+  margin-left:10px;
+  padding:0 !important;          /* evita que “empuje” el contenido */
+}
+.item-header.orden-header .orden-folder img{
+  width:46px !important;         /* tamaño tipo referencia */
+  height:46px !important;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
+}
 </style>
 </head>
 <body>
@@ -1116,20 +1138,20 @@ function pintarCuentas(list){
     div.className='item-card';
 
     const header=document.createElement('div');
-    header.className='item-header';
+    header.className='item-header orden-header';
 
     const title=document.createElement('p');
     title.className='item-title';
     title.textContent= (c.nombre||'');
     header.appendChild(title);
 
-    // Ícono carpeta a BH (idCuenta) a la derecha (como imagen)
-    const rightIcon = document.createElement('button');
-    rightIcon.className = 'btn-icon';
-    rightIcon.title = 'Abrir carpeta de CUENTA';
-    rightIcon.setAttribute('aria-label','Abrir carpeta de CUENTA');
-    rightIcon.innerHTML = '<img src="https://res.cloudinary.com/dqqeavica/image/upload/v1764111247/carpeta_drive_epbrhp.webp" alt="CUENTA">';
-    rightIcon.addEventListener('click', ()=>{
+    // Ícono carpeta a BH (idCuenta) arriba a la derecha SIN desacomodar
+    const folderBtn = document.createElement('button');
+    folderBtn.className = 'btn-icon orden-folder';
+    folderBtn.title = 'Abrir carpeta de CUENTA';
+    folderBtn.setAttribute('aria-label','Abrir carpeta de CUENTA');
+    folderBtn.innerHTML = '<img src="https://res.cloudinary.com/dqqeavica/image/upload/v1764111247/carpeta_drive_epbrhp.webp" alt="CUENTA">';
+    folderBtn.addEventListener('click', ()=>{
       playSoundOnce(SOUNDS.login);
       const idCuenta = String(c.idCuenta || '').trim();
       if(idCuenta){
@@ -1138,7 +1160,7 @@ function pintarCuentas(list){
         Swal.fire({icon:'info',title:'Sin carpeta',text:'Esta cuenta no tiene id de carpeta (BH) asociado.'});
       }
     });
-    header.appendChild(rightIcon);
+    header.appendChild(folderBtn);
 
     const pDoc=document.createElement('p');
     pDoc.className='item-sub';
@@ -1152,9 +1174,10 @@ function pintarCuentas(list){
     pInf.className='item-sub';
     pInf.textContent='INFORME: '+(c.informe||'')+' de: '+(c.totalInformes||'');
 
+    const facturaVal = String(c.facturaElectronica||'').trim();
     const pFactura=document.createElement('p');
     pFactura.className='item-sub';
-    pFactura.textContent='FACTURA ELECTRÓNICA N°: '+(c.facturaElectronica||'');
+    pFactura.textContent='FACTURA ELECTRÓNICA N°: '+(facturaVal ? facturaVal : 'N/A');
 
     const pSup=document.createElement('p');
     pSup.className='item-sub';
@@ -1175,24 +1198,6 @@ function pintarCuentas(list){
     });
     btnRow.appendChild(btnAccion);
 
-    // WhatsApp solo en EMISIÓN (cuando ya se emite, se envía desde backend/flow)
-    if (c.telefono && ORDEN_MODE === 'EMISION'){
-      const btnWhatsapp = document.createElement('button');
-      btnWhatsapp.className = 'btn-icon';
-      btnWhatsapp.innerHTML = '<img src="https://res.cloudinary.com/dqqeavica/image/upload/v1759166341/WhatsApp_mljaqm.webp" alt="WhatsApp">';
-      btnWhatsapp.setAttribute('aria-label','Abrir chat de WhatsApp');
-      btnWhatsapp.addEventListener('click', ()=>{
-        let tel = String(c.telefono||'').replace(/\D/g,'');
-        if(!tel){ Swal.fire({icon:'info',title:'Sin teléfono'}); return; }
-        if(!tel.startsWith('57')) tel = '57' + tel;
-        if(!/^57\d{10}$/.test(tel)){
-          Swal.fire({icon:'warning',title:'Teléfono inválido'}); return;
-        }
-        window.open('https://wa.me/'+tel,'_blank');
-      });
-      btnRow.appendChild(btnWhatsapp);
-    }
-
     div.appendChild(header);
     div.appendChild(pDoc);
     div.appendChild(pContrato);
@@ -1203,7 +1208,7 @@ function pintarCuentas(list){
     wrap.appendChild(div);
   }
 }
-
+  
 document.getElementById('cuentas-filter').addEventListener('input',()=>{
   const qRaw = document.getElementById('cuentas-filter').value.trim().toLowerCase();
   const digits = qRaw.replace(/\D/g,'');
@@ -1270,6 +1275,11 @@ async function emitirOrdenPagoFlow(c){
   const nombre = c.nombre || '';
   const informe = c.informe || '';
 
+  const telContratistaRaw = c.telefono || '';
+  const telContratista = normalizeContratistaNumber(telContratistaRaw);
+
+  const TESORERIA_GROUP_ID = 'KQyQKkptgOI56Qbn6gsJUh'; /*Grupo de tesorería*/
+
   const rs = await Swal.fire({
     icon:'success',
     title:`Pre-Orden N° ${informe} de ${nombre}`,
@@ -1279,15 +1289,41 @@ async function emitirOrdenPagoFlow(c){
     cancelButtonText:'Cancelar'
   });
 
+  function msgOrdenPagoContratista(){
+    return (
+      '> Estado 4️⃣\n' +
+      'Estimado(a) *'+nombre+'*\n\n' +
+      '¡Ha sido emitada la orden de pago de tu *Cuenta N° '+informe+'*\n' +
+      'El equipo de *Tesoría* revisará la información para generar el Egreso y Pago de tus honorarios.\n' +
+      '> Recuerda que, el proceso se realiza en orden de solicitudes. Agradecemos tu comprensión\n\n' +
+      'Cordialmente,\n\n*Equipo de Contabilidad*\n> Alcaldía de Flandes'
+    );
+  }
+
+  function msgOrdenPagoTesoreria(){
+    return (
+      'Estimado Equipo de Tesorería\n\n' +
+      'Se ha generado la *Orden de Pago* de la *Cuenta N° '+informe+'* del contratista *'+nombre+'*\n\n' +
+      'Por favor revisar para generar Egreso.\n\n' +
+      'Cordialmente,\n\n*Equipo de Contabilidad*'
+    );
+  }
+
   if(!rs.isConfirmed) return;
 
   try{
-    // Backend: cambia BJ a ORDEN DE PAGO y marca ORDENES F=EMITIDO, y envía whatsapp
+    // Backend SOLO actualiza estados (CUENTAS BJ -> ORDEN DE PAGO y ORDENES F -> EMITIDO)
     await apiPost('emitirOrdenPagoV2', {
       documento,
       informe,
       responsable: currentUser?.profesional || ''
     });
+
+    // Envío WhatsApp SOLO desde aquí (como lo querías)
+    if(telContratista){
+      sendBuilderbotMessage(telContratista, msgOrdenPagoContratista());
+    }
+    sendBuilderbotMessage(TESORERIA_GROUP_ID, msgOrdenPagoTesoreria());
 
     Swal.fire({icon:'success',title:'Orden de Pago Emitida',timer:1800,showConfirmButton:false});
     await cargarCuentasPendientes();
@@ -1298,8 +1334,6 @@ async function emitirOrdenPagoFlow(c){
 }
 
 /* ================== REVISAR CUENTA (Detalle) ================== */
-/* Se deja intacto tu módulo de revisar-cuenta para no afectar lógica existente.
-   OJO: el listado ya no navega aquí; se conserva por compatibilidad. */
 
 function resetSeccionesRevision(){
   const parts = [
