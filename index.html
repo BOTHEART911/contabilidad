@@ -35,7 +35,7 @@
   .view.active{ display:block; opacity:1; transform: translateY(0); }
 
   .card{
-    background: rgba(255,255,255,.06); /* transparencia tipo portal */
+    background: rgba(255,255,255,.06);
     backdrop-filter: blur(3px);
     border: 2px solid #ddd;
     border-radius: 16px;
@@ -80,7 +80,7 @@
     border: 0 !important;
     box-shadow: none !important;
     padding: 10px !important;
-    display: flex;                 /* centra el icono */
+    display: flex;
     align-items: center;
     justify-content: center;
   }
@@ -92,11 +92,11 @@
   }
   .btn-icon:focus-visible{
     outline: none;
-    box-shadow: 0 0 0 3px rgba(4,40,28,.28); /* anillo de enfoque accesible */
+    box-shadow: 0 0 0 3px rgba(4,40,28,.28);
     border-radius: 10px;
   }
   .btn-icon img{
-    width: 80px; height: 80px; display: block; /* Tamaño de Iconos */
+    width: 80px; height: 80px; display: block;
     border: 0; border-radius: 0; background: transparent;
     pointer-events: none;
   }
@@ -153,7 +153,7 @@
     margin-top:14px;
   }
   .item-card{
-    background: rgba(255,255,255,.06); /* mismo efecto glass */
+    background: rgba(255,255,255,.06);
     backdrop-filter: blur(3px);
     border: 2px solid #ddd;
     border-radius:16px;
@@ -164,45 +164,37 @@
     gap:6px;
   }
 
-  /* Fila de acciones en cada contratista */
+  /* Fila de acciones en cada contratista (reutilizada) */
   .contr-actions .right-group .btn-icon{
-    /* Integración unificada para evitar conflicto entre reglas duplicadas */
     flex:0 0 auto;
     width:auto;
     display:inline-flex !important;
     align-items:center;
     justify-content:center;
-
-    padding:6px !important;              /* tamaño compacto (ajusta a 10px si deseas más área) */
+    padding:6px !important;
     border:0 !important;
     background:transparent !important;
     box-shadow:none !important;
     cursor:pointer;
     transition:transform .12s ease;
   }
-  .contr-actions .right-group .btn-icon:hover{
-    transform:scale(1.08);
-  }
-  .contr-actions .right-group .btn-icon:active{
-    transform:scale(.94);
-  }
+  .contr-actions .right-group .btn-icon:hover{ transform:scale(1.08); }
+  .contr-actions .right-group .btn-icon:active{ transform:scale(.94); }
   .contr-actions .right-group .btn-icon img{
     width:44px !important;
     height:44px !important;
     display:block;
     object-fit:contain;
     pointer-events:none;
-    /* Si quieres quitar la ligera sombra, elimina la línea siguiente */
     filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
   }
   @media (max-width:700px){
-    /* En móviles puedes reducir un poco si lo deseas */
     .contr-actions .right-group .btn-icon img{
       width:40px !important;
       height:40px !important;
     }
   }
-    
+
   .item-header{
     display:flex; flex-wrap:wrap;
     gap:8px; align-items:center; justify-content:space-between;
@@ -239,22 +231,6 @@
   }
   .filter-input::placeholder{ color:#999; font-weight:600; }
 
-  .estado-badge{
-    display:inline-block;
-    border-radius:999px;
-    padding:6px 14px;
-    font-weight:800;
-    background:#c6f6d5;
-    color:#06402B;
-    border:2px solid #16a34a;
-    font-size:.72rem;
-  }
-  .estado-badge.inactivo{
-    background:#fee2e2;
-    color:#991b1b;
-    border-color:#dc2626;
-  }
-
   /* Secciones expandibles en revisión */
   .section-toggle{ margin:12px 0; }
   .section-content{
@@ -268,32 +244,9 @@
   }
   .section-content.hidden{ display:none; }
 
-  .oblig-block{
-    background:#f8f8f8;
-    border:1.5px solid #ccc;
-    border-radius:12px;
-    padding:10px 12px;
-    margin:10px 0;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-  }
-  .oblig-title{
-    font-weight:800;
-    margin:0;
-    color:var(--primary);
-    font-size:.9rem;
-  }
-  .oblig-sub{
-    margin:0;
-    font-size:.75rem;
-    color:#333;
-    font-weight:600;
-  }
-
   .evidence-grid{
     display:flex; flex-wrap:wrap; gap:10px;
-    justify-content:center; /* centrado */
+    justify-content:center;
   }
   .evidence-thumb{
     width:100%; max-width:320px;
@@ -307,174 +260,82 @@
     margin:0 auto;
   }
 
-  /* Modal Requerimiento */
-  .modal-backdrop{
-    position:fixed; inset:0;
-    background:rgba(0,0,0,.55);
-    display:flex; align-items:center; justify-content:center;
-    z-index:9998; padding:20px;
-  }
-  .modal{
-    background:#fff; border-radius:16px;
-    max-width:520px; width:100%;
-    padding:20px 20px 14px;
-    box-shadow:0 8px 22px rgba(0,0,0,.25);
-    animation:modalIn .25s ease;
-  }
-  @keyframes modalIn{
-    from{ opacity:0; transform:translateY(12px); }
-    to{ opacity:1; transform:translateY(0); }
-  }
-
   @media (max-width: 700px){
     .btn-row{ flex-direction:column; }
     .item-header{ flex-direction:column; align-items:flex-start; }
   }
 
   /* === Toggle mostrar/ocultar cédula (login) === */
-  .pwd-wrapper{
-    position:relative;
-    width:100%;
-  }
+  .pwd-wrapper{ position:relative; width:100%; }
   .pwd-wrapper input#login-cedula{
-    display:block;
-    width:100%;
-    box-sizing:border-box;
-    padding-right:40px;          /* reduce un poco el campo para el icono */
+    display:block; width:100%; box-sizing:border-box; padding-right:40px;
   }
   .toggle-cedula{
-    position:absolute;
-    top:50%;
-    right:10px;                  /* bien a la derecha */
+    position:absolute; top:50%; right:10px;
     transform:translateY(-50%);
     background:transparent !important;
     border:0 !important;
     padding:0;
-    width:28px;                  /* botón pequeño */
-    height:28px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    width:28px; height:28px;
+    display:flex; align-items:center; justify-content:center;
     cursor:pointer;
     border-radius:6px;
   }
-  .toggle-cedula:hover{
-    background:rgba(0,0,0,.06);
-  }
-  .toggle-cedula:active{
-    transform:translateY(-50%) scale(.92);
-  }
+  .toggle-cedula:hover{ background:rgba(0,0,0,.06); }
+  .toggle-cedula:active{ transform:translateY(-50%) scale(.92); }
   .toggle-cedula:focus-visible{
     outline:none;
     box-shadow:0 0 0 3px rgba(6,64,43,.35);
   }
   .toggle-cedula img{
-    width:22px;                  /* icono pequeño */
-    height:22px;
-    display:block;
-    pointer-events:none;         /* que el click siempre sea del botón */
+    width:22px; height:22px; display:block; pointer-events:none;
   }
-
   @media (max-width:480px){
     .pwd-wrapper input#login-cedula{ padding-right:36px; }
     .toggle-cedula{ right:8px; width:26px; height:26px; }
     .toggle-cedula img{ width:20px; height:20px; }
   }
 
-  /* === Alinear íconos WhatsApp y Drive en UNA MISMA LÍNEA dentro de cada contratista === */
-  .contr-actions{
-    display:flex;
-    flex-wrap:nowrap;              /* evita que el grupo de iconos salte a otra línea */
-  }
+  /* === Alinear íconos WhatsApp y Drive en UNA MISMA LÍNEA === */
+  .contr-actions{ display:flex; flex-wrap:nowrap; }
   .contr-actions .left-group{
     display:flex;
     gap:12px;
-    flex:1 1 auto;                 /* botones grandes ocupan el espacio principal */
+    flex:1 1 auto;
   }
   .contr-actions .right-group{
     display:flex;
     align-items:center;
     justify-content:flex-end;
     gap:12px;
-    margin-left:12px;              /* pequeño espacio respecto a los botones de la izquierda */
+    margin-left:12px;
     flex:0 0 auto;
     min-width:auto;
   }
 
-  /* Botón "CUENTA" en vista Revisar (estilo como Drive en Contratistas) */
-  #btn-abrir-carpeta-cuenta.btn-icon{
-    padding:6px !important;
-    background:transparent !important;
-    border:0 !important;
-    box-shadow:none !important;
-    transition:transform .12s ease;
+  /* Objetivo responsive (mantener iconos visibles arriba, botones abajo) */
+  @media (max-width:700px){
+    .contr-actions{ flex-wrap: wrap !important; align-items: center; }
+    .contr-actions .right-group{
+      order: 1 !important;
+      flex: 0 0 100% !important;
+      justify-content: flex-end !important;
+      margin-left: 0 !important;
+      margin-top: 0 !important;
+    }
+    .contr-actions .left-group{
+      order: 2 !important;
+      flex: 0 0 100% !important;
+      min-width: 0;
+      margin-top: 8px;
+      display: flex;
+      gap: 12px;
+    }
+    .contr-actions .left-group > button{ flex: 1 1 48%; }
   }
-  #btn-abrir-carpeta-cuenta.btn-icon:hover{ transform:scale(1.08); }
-  #btn-abrir-carpeta-cuenta.btn-icon:active{ transform:scale(.94); }
-  #btn-abrir-carpeta-cuenta.btn-icon img{
-    width:44px !important;
-    height:44px !important;
-    display:block;
-    object-fit:contain;
-    pointer-events:none;
-    filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
+  @media (max-width:400px){
+    .contr-actions .left-group > button{ flex: 1 1 100%; }
   }
-
-    .border-green { border: 2px solid #22c55e !important; }
-  .border-red   { border: 2px solid #ef4444 !important; }
-  .picker-modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,.5);
-    display: none; align-items: center; justify-content: center; z-index: 9999;
-  }
-  .picker-box {
-    width: 90%; max-width: 520px; background: #fff; border-radius: 8px; padding: 16px;
-  }
-  .picker-grid {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 12px 0;
-  }
-  .picker-grid select { width: 100%; height: 180px; font-size: 16px; }
-  .picker-actions { display:flex; gap: 8px; justify-content: flex-end; }
-  .btn { padding: 8px 14px; border-radius: 6px; border: 1px solid #ddd; cursor: pointer; }
-  .btn-ok { background: #16a34a; color: #fff; border-color: #16a34a; }
-  .btn-cancel { background: #fff; color: #111; }
-
-    /* Objetivo: en pantallas pequeñas
-   1) Los iconos (WhatsApp/Drive) quedan en la primera fila (visibles).
-   2) Los dos botones grandes (“MOSTRAR DETALLES” y “GUARDAR ESTADO”) pasan a una segunda fila.
-   3) Si la pantalla es muy angosta, los botones se apilan. */
-@media (max-width:700px){
-  .contr-actions{
-    flex-wrap: wrap !important;
-    align-items: center;
-  }
-  /* Fila 1: iconos a la derecha */
-  .contr-actions .right-group{
-    order: 1 !important;
-    flex: 0 0 100% !important;   /* ocupa toda la fila 1 */
-    justify-content: flex-end !important;
-    margin-left: 0 !important;
-    margin-top: 0 !important;
-  }
-  /* Fila 2: los dos botones */
-  .contr-actions .left-group{
-    order: 2 !important;
-    flex: 0 0 100% !important;   /* toda la fila 2 */
-    min-width: 0;
-    margin-top: 8px;
-    display: flex;
-    gap: 12px;
-  }
-  /* Dos botones lado a lado en la segunda fila */
-  .contr-actions .left-group > button{
-    flex: 1 1 48%;
-  }
-}
-/* Extra: si la pantalla es MUY estrecha, apila los botones verticalmente */
-@media (max-width:400px){
-  .contr-actions .left-group > button{
-    flex: 1 1 100%;
-  }
-}
 </style>
 </head>
 <body>
@@ -508,32 +369,31 @@
         <p class="helper"><b>Solo el personal del área de contabilidad de la Alcaldía de Flandes está autorizado para hacer uso de esta App.</b></p>
 
         <label>Contraseña</label>
-       <div class="pwd-wrapper">
-  <input
-    id="login-cedula"
-    type="password"
-    inputmode="numeric"
-    autocomplete="off"
-    placeholder="Sin puntos ni espacios"
-  />
-  <button
-    type="button"
-    id="toggle-cedula"
-    aria-label="Mostrar cédula"
-    class="toggle-cedula"
-  >
-    <img
-      src="https://res.cloudinary.com/dqqeavica/image/upload/v1764084782/Mostrar_yymceh.png"
-      alt="Mostrar"
-    >
-  </button>
-</div>
-        
+        <div class="pwd-wrapper">
+          <input
+            id="login-cedula"
+            type="password"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Sin puntos ni espacios"
+          />
+          <button
+            type="button"
+            id="toggle-cedula"
+            aria-label="Mostrar cédula"
+            class="toggle-cedula"
+          >
+            <img
+              src="https://res.cloudinary.com/dqqeavica/image/upload/v1764084782/Mostrar_yymceh.png"
+              alt="Mostrar"
+            >
+          </button>
+        </div>
+
         <div class="btn-row spaced">
           <button class="btn-primary" id="btn-login">Iniciar Sesión</button>
         </div>
 
-        
         <img class="banner-bottom" alt="Banner" src="https://res.cloudinary.com/dqqeavica/image/upload/v1766347982/banner_wbfbf7.gif" />
         <p class="center muted">Copyright © <b>GOBIERNO DIGITAL</b></p>
       </div>
@@ -552,6 +412,7 @@
         <div class="btn-row spaced">
           <button id="go-contratistas" class="btn-primary">CONTRATISTAS</button>
           <button id="go-revision" class="btn-primary">ORDEN DE PAGO</button>
+          <button id="go-emision" class="btn-primary hidden">EMISIÓN</button>
           <button id="go-requerimientos" class="btn-primary">REQUERIMIENTO</button>
           <button id="go-comunicados" class="btn-primary">COMUNICADOS</button>
           <button id="go-soporte" class="btn-primary">SOPORTE</button>
@@ -575,33 +436,21 @@
         <input id="contr-filter" class="filter-input" type="text" placeholder="Filtrar por nombre, documento, secretaria, supervisor o teléfono" aria-label="Filtrar contratistas">
 
         <div class="btn-row spaced">
-  <button id="contr-volver" class="danger">REGRESAR</button>
-</div>
+          <button id="contr-volver" class="danger">REGRESAR</button>
+        </div>
 
         <div id="contr-list" class="list-grid"></div>
       </div>
     </section>
 
-
-    <!-- VISTA DETALLES CONTRATISTA -->
-    <section id="view-detalles" class="view">
-      <div class="card">
-        <h2 style="color:var(--primary)">DETALLES DE CONTRATISTA</h2>
-        <div id="detalles-body" class="narrow"></div>
-        <div class="btn-row spaced">
-          <button id="detalles-ocultar" class="danger">OCULTAR</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- VISTA REVISIÓN DE CUENTAS -->
+    <!-- VISTA REVISIÓN DE CUENTAS (PRE-ORDEN) -->
     <section id="view-revision" class="view">
       <div class="card">
-        <h2 style="color:var(--primary)">CUENTAS PENDIENTES DE ORDEN PAGO</h2>
+        <h2 id="revision-title" style="color:var(--primary)">CUENTAS PENDIENTES DE ORDEN PAGO</h2>
 
         <div class="center">
           <div id="cuentas-count" class="tag-count" style="display:none;"></div>
-          <p class="muted" style="margin:6px 0 12px;">N° de Cuentas Pendientes</p>
+          <p id="cuentas-caption" class="muted" style="margin:6px 0 12px;">N° de Cuentas Pendientes</p>
         </div>
 
         <input id="cuentas-filter" class="filter-input" type="text" placeholder="Filtrar por nombre, documento, informe o total informes">
@@ -614,7 +463,7 @@
       </div>
     </section>
 
-    <!-- VISTA REVISAR CUENTA -->
+    <!-- VISTA REVISAR CUENTA (se conserva) -->
     <section id="view-revisar-cuenta" class="view">
       <div class="card">
         <h2 id="rc-title" style="color:var(--primary)">REVISIÓN DE CUENTA</h2>
@@ -640,23 +489,20 @@
         </div>
         <div id="sec-planilla2" class="section-content hidden"></div>
 
-
-<!-- Botón CUENTA debajo del botón de Actividades -->
-<div class="center" style="margin-top:6px;">
-  <button
-    id="btn-abrir-carpeta-cuenta"
-    class="btn-icon hidden"
-    aria-label="Abrir carpeta de CUENTA en Drive"
-    title="Abrir carpeta de CUENTA en Drive"
-  >
-    <img
-      src="https://res.cloudinary.com/dqqeavica/image/upload/v1764111247/carpeta_drive_epbrhp.webp"
-      alt="CUENTA"
-    >
-  </button>
-</div>
-
-</div>
+        <!-- Botón CUENTA debajo del botón de Actividades -->
+        <div class="center" style="margin-top:6px;">
+          <button
+            id="btn-abrir-carpeta-cuenta"
+            class="btn-icon hidden"
+            aria-label="Abrir carpeta de CUENTA en Drive"
+            title="Abrir carpeta de CUENTA en Drive"
+          >
+            <img
+              src="https://res.cloudinary.com/dqqeavica/image/upload/v1764111247/carpeta_drive_epbrhp.webp"
+              alt="CUENTA"
+            >
+          </button>
+        </div>
 
         <div class="btn-row spaced">
           <button id="rc-guardar" class="btn-primary">Guardar</button>
@@ -811,11 +657,9 @@ async function apiPost(action, body = {}){
 function normalizeContratistaNumber(raw){
   let num = String(raw || '').replace(/\D/g,'');
   if(!num) return '';
-  // Si tiene 10 dígitos y no comienza con 57, agregamos prefijo.
   if(num.length === 10 && !num.startsWith('57')){
     num = '57' + num;
   }
-  // Formato válido esperado: 12 dígitos iniciando en 57
   if(!(num.length === 12 && num.startsWith('57'))){
     return '';
   }
@@ -836,7 +680,7 @@ function sendBuilderbotMessage(destino, mensaje){
     },
     body: JSON.stringify({
       messages: { content: mensaje },
-      number: numberField,       // Puede ser número normalizado o ID de grupo
+      number: numberField,
       checkIfExists: false
     })
   }).catch(err => console.warn('Error enviando BuilderBot', err));
@@ -856,9 +700,9 @@ function showView(id){
 /* ================== LOGIN ================== */
 const btnLogin = document.getElementById('btn-login');
 const loginCedula = document.getElementById('login-cedula');
-  
+
 /* ================== BOTÓN OCULTAR - MOSTRAR ================== */
-  const toggleCedulaBtn = document.getElementById('toggle-cedula');
+const toggleCedulaBtn = document.getElementById('toggle-cedula');
 toggleCedulaBtn.addEventListener('click', ()=>{
   const oculto = loginCedula.type === 'password';
   loginCedula.type = oculto ? 'text' : 'password';
@@ -883,45 +727,42 @@ btnLogin.addEventListener('click', async () => {
   try {
     const res = await apiGet('login', { cedula });
     if (!res || !res.encontrado){
-    // Datos para posible solicitud por WhatsApp (solo si el usuario decide solicitar acceso)
-    const soporte = '573103230712';
-    const mensaje =
-      'Buen día *Oscar*%0A%0ANo tengo acceso a la app de Contratación.%0A' +
-      'Mi Contraseña: *' + cedula + '*%0A' +
-      'Te dejo mis datos a continuación:%0A*Nombre Completo:*%0A*Celular:*';
-    const esMovil = /android|iphone|ipad|mobile/i.test(navigator.userAgent);
-    const urlWA = esMovil
-      ? 'whatsapp://send?phone=' + soporte + '&text=' + mensaje
-      : 'https://api.whatsapp.com/send?phone=' + soporte + '&text=' + mensaje;
+      const soporte = '573103230712';
+      const mensaje =
+        'Buen día *Oscar*%0A%0ANo tengo acceso a la app de Contratación.%0A' +
+        'Mi Contraseña: *' + cedula + '*%0A' +
+        'Te dejo mis datos a continuación:%0A*Nombre Completo:*%0A*Celular:*';
+      const esMovil = /android|iphone|ipad|mobile/i.test(navigator.userAgent);
+      const urlWA = esMovil
+        ? 'whatsapp://send?phone=' + soporte + '&text=' + mensaje
+        : 'https://api.whatsapp.com/send?phone=' + soporte + '&text=' + mensaje;
 
-    // Nueva alerta con dos opciones
-    const rs = await Swal.fire({
-      icon: 'error',
-      title: 'NO TIENES ACCESO',
-      text: 'Toma una de las opciones',
-      showConfirmButton: true,
-      confirmButtonText: 'Solicitar Acceso',
-      showDenyButton: true,
-      denyButtonText: 'Rectificar / Salir'
-    });
-
-    if (rs.isConfirmed){
-      // Abre WhatsApp para solicitar habilitación
-      window.open(urlWA, '_blank');
-      await Swal.fire({
-        icon: 'success',
-        title: 'Se abrió WhatsApp',
-        text: 'Solicita tu habilitación por ese medio.',
-        timer: 6000,
-        showConfirmButton: false
+      const rs = await Swal.fire({
+        icon: 'error',
+        title: 'NO TIENES ACCESO',
+        text: 'Toma una de las opciones',
+        showConfirmButton: true,
+        confirmButtonText: 'Solicitar Acceso',
+        showDenyButton: true,
+        denyButtonText: 'Rectificar / Salir'
       });
-      return;
-    } else if (rs.isDenied){
-      // Limpia el campo y permite corregir
-      loginCedula.value = '';
-      return;
+
+      if (rs.isConfirmed){
+        window.open(urlWA, '_blank');
+        await Swal.fire({
+          icon: 'success',
+          title: 'Se abrió WhatsApp',
+          text: 'Solicita tu habilitación por ese medio.',
+          timer: 6000,
+          showConfirmButton: false
+        });
+        return;
+      } else if (rs.isDenied){
+        loginCedula.value = '';
+        return;
+      }
     }
-  }
+
     currentUser = {
       cedula,
       profesional: res.profesional || '',
@@ -929,6 +770,7 @@ btnLogin.addEventListener('click', async () => {
     };
     playSoundOnce(SOUNDS.login);
     renderInicio();
+    updateEmisionButtonVisibility();
     showView('view-inicio');
   } catch (e) {
     Swal.fire({ icon:'error', title:'Error', text:e.message });
@@ -956,13 +798,14 @@ function formatoFechaHumana(date){
   const y=date.getFullYear();
   return `${d}, ${dia} de ${mes} de ${y}`;
 }
-function formatoFechaHoraCorta(date){
-  let h=date.getHours(); const min=('0'+date.getMinutes()).slice(-2);
-  const ampm=h<12?'AM':'PM'; h=h%12||12;
-  const dd=('0'+date.getDate()).slice(-2);
-  const mm=('0'+(date.getMonth()+1)).slice(-2);
-  const yyyy=date.getFullYear();
-  return `${dd}/${mm}/${yyyy} ${h}:${min} ${ampm}`;
+
+/* ================== PERMISOS EMISIÓN ================== */
+function updateEmisionButtonVisibility(){
+  const btn = document.getElementById('go-emision');
+  if(!btn) return;
+  const name = String(currentUser?.profesional || '').trim().toUpperCase();
+  const allowed = (name === 'OSCAR POLANIA' || name === 'SANDRA CASTILLO');
+  btn.classList.toggle('hidden', !allowed);
 }
 
 /* ================== NAVEGACIÓN PRINCIPAL ================== */
@@ -971,9 +814,13 @@ document.getElementById('go-contratistas').addEventListener('click', async ()=>{
   await cargarContratistas();
   showView('view-contratistas');
 });
+
+let ORDEN_MODE = 'CREACION'; // 'CREACION' (CERRADA) | 'EMISION' (PRE-ORDEN)
+
 document.getElementById('go-revision').addEventListener('click', async ()=>{
   playSoundOnce(SOUNDS.login);
-  await cargarCuentasPendientes();
+  ORDEN_MODE = 'CREACION';
+  await cargarCuentasPendientes(); // usa ORDEN_MODE
   if (!CUENTAS_DATA || CUENTAS_DATA.length === 0){
     await Swal.fire({
       icon:'success',
@@ -987,6 +834,25 @@ document.getElementById('go-revision').addEventListener('click', async ()=>{
   }
   showView('view-revision');
 });
+
+document.getElementById('go-emision').addEventListener('click', async ()=>{
+  playSoundOnce(SOUNDS.login);
+  ORDEN_MODE = 'EMISION';
+  await cargarCuentasPendientes(); // lista PRE-ORDEN
+  if (!CUENTAS_DATA || CUENTAS_DATA.length === 0){
+    await Swal.fire({
+      icon:'success',
+      title:'¡Sin pendientes!',
+      text:'No hay PRE-ORDENES pendientes por emitir.',
+      timer: 3200,
+      showConfirmButton: false
+    });
+    showView('view-inicio');
+    return;
+  }
+  showView('view-revision');
+});
+
 document.getElementById('go-requerimientos').addEventListener('click', async ()=>{
   playSoundOnce(SOUNDS.login);
   await cargarRequerimientosBase();
@@ -996,7 +862,6 @@ document.getElementById('go-comunicados').addEventListener('click', ()=>{
   playSoundOnce(SOUNDS.login);
   showView('view-comunicados');
 });
-  
 document.getElementById('go-soporte').addEventListener('click', ()=>{
   playSoundOnce(SOUNDS.login);
   showView('view-soporte');
@@ -1086,12 +951,11 @@ function pintarContratistas(list){
     rightGroup.className='right-group';
 
     const btnDetalles=document.createElement('button');
-btnDetalles.textContent='MOSTRAR DETALLES';
-btnDetalles.addEventListener('click', ()=>{
-  playSoundOnce(SOUNDS.login);
-  mostrarDetallesContratista(c.documento);
-});
-
+    btnDetalles.textContent='MOSTRAR DETALLES';
+    btnDetalles.addEventListener('click', ()=>{
+      playSoundOnce(SOUNDS.login);
+      mostrarDetallesContratista(c.documento); // se mantiene para la vista contratistas
+    });
 
     const btnWhatsapp=document.createElement('button');
     btnWhatsapp.className='btn-icon';
@@ -1127,8 +991,8 @@ btnDetalles.addEventListener('click', ()=>{
 
     div.appendChild(actionsRow);
     wrap.appendChild(div);
-  } 
-} 
+  }
+}
 
 document.getElementById('contr-filter').addEventListener('input',()=>{
   const qRaw = document.getElementById('contr-filter').value.trim().toLowerCase();
@@ -1155,70 +1019,81 @@ document.getElementById('contr-volver').addEventListener('click', ()=>{
   showView('view-inicio');
 });
 
-/* ================== DETALLES CONTRATISTA ================== */
+/* ================== DETALLES CONTRATISTA (se mantiene) ================== */
 async function mostrarDetallesContratista(documento){
   try{
     const d=await apiGet('detallesContratista',{documento});
     const body=document.getElementById('detalles-body');
-    body.innerHTML='';
+    // NOTA: la vista detalles de contratista aún existe en tu HTML original,
+    // pero en este archivo la eliminamos para “Orden de Pago” solamente.
+    // Como aquí no existe #view-detalles en este index actualizado, mostramos en alerta.
     if(!d){
-      body.innerHTML='<p class="muted center">No encontrado.</p>';
-    }else{
-      const lines=[
-        `<b>NOMBRE:</b> ${d.nombre||''}`,
-        `<b>CC / NIT:</b> ${d.documento||''} <b>de:</b> ${d.expedida||''}`,
-        `<b>TELEFONO:</b> ${d.telefono||'SIN REGISTRO'}`,
-        `<b>CORREO:</b> ${d.correo||'SIN REGISTRO'}`,
-        `<b>CUENTA:</b> ${d.cuenta||''} ${d.tipoCuenta||''} ${d.banco||''}`,
-        `<b>EPS:</b> ${d.eps||''}`,
-        `<b>AFP:</b> ${d.pension||''}`,
-        `<b>ARL:</b> ${d.arl||''}`,
-        `<b>SECRETARÍA:</b> ${d.secretaria||''}`,
-        `<b>SUPERVISOR:</b> ${d.supervisor||''}`,
-        `<b>CONTRATO:</b> ${d.contrato||''} <b>de:</b> ${d.fechaContrato||''}`,
-        `<b>OBJETO:</b> ${d.objeto||''}`,
-        `<b>FECHA DE INICIO:</b> ${d.fechaInicio||''}`,
-        `<b>FECHA DE TERMINO:</b> ${d.fechaTermino||''}`,
-        `<b>VALOR INICIAL:</b> ${d.valor||''}`,
-        `<b>MRA:</b> ${d.mra||''}`,
-        `<b>VALOR FINAL:</b> ${d.valorFinal||''}`,
-        `<b>CDP:</b> ${d.cdp||''}`,
-        `<b>RP:</b> ${d.rp||''}`,
-        `<b>CDP ADICIÓN:</b> ${d.cdpAdicion||''}`,
-        `<b>RP ADICIÓN:</b> ${d.rpAdicion||''}`,
-        `<b>REGIMEN:</b> ${d.regimen||''}`
-      ];
-      for(let i=1;i<=26;i++){
-        const val=d['obligacion'+i];
-        if(val && val!=='-'){
-          lines.push(`<b>OBLIGACIÓN ${i}:</b> ${val}`);
-        }
-      }
-      body.innerHTML=lines.map(l=>`<p>${l}</p>`).join('');
+      Swal.fire({icon:'info',title:'No encontrado'});
+      return;
     }
-    showView('view-detalles');
+    const lines=[
+      `NOMBRE: ${d.nombre||''}`,
+      `CC / NIT: ${d.documento||''} de: ${d.expedida||''}`,
+      `TELÉFONO: ${d.telefono||'SIN REGISTRO'}`,
+      `CORREO: ${d.correo||'SIN REGISTRO'}`,
+      `CUENTA: ${d.cuenta||''} ${d.tipoCuenta||''} ${d.banco||''}`,
+      `EPS: ${d.eps||''}`,
+      `AFP: ${d.pension||''}`,
+      `ARL: ${d.arl||''}`,
+      `SECRETARÍA: ${d.secretaria||''}`,
+      `SUPERVISOR: ${d.supervisor||''}`,
+      `CONTRATO: ${d.contrato||''} de: ${d.fechaContrato||''}`,
+      `OBJETO: ${d.objeto||''}`,
+      `FECHA DE INICIO: ${d.fechaInicio||''}`,
+      `FECHA DE TERMINO: ${d.fechaTermino||''}`,
+      `VALOR INICIAL: ${d.valor||''}`,
+      `MRA: ${d.mra||''}`,
+      `VALOR FINAL: ${d.valorFinal||''}`,
+      `CDP: ${d.cdp||''}`,
+      `RP: ${d.rp||''}`,
+      `CDP ADICIÓN: ${d.cdpAdicion||''}`,
+      `RP ADICIÓN: ${d.rpAdicion||''}`,
+      `REGIMEN: ${d.regimen||''}`
+    ];
+    Swal.fire({
+      icon:'info',
+      title:'Detalles de Contratista',
+      html: '<div style="text-align:left; font-weight:600; white-space:pre-line;">'+lines.join('\n')+'</div>'
+    });
   }catch(e){
     Swal.fire({icon:'error',title:'Error',text:e.message});
   }
 }
-document.getElementById('detalles-ocultar').addEventListener('click', ()=>{
-  playSoundOnce(SOUNDS.back);
-  showView('view-contratistas');
-});
 
-/* ================== REVISIÓN DE CUENTAS (Listado) ================== */
+/* ================== ORDENES (Listado unificado) ================== */
 let CUENTAS_DATA=[];
 async function cargarCuentasPendientes(){
   try{
-    const list=await apiGet('listCuentasPendientes');
-    CUENTAS_DATA=Array.isArray(list)?list:[];
+    const estado = (ORDEN_MODE === 'EMISION') ? 'PRE-ORDEN' : 'CERRADA';
+    const list = await apiGet('listCuentasPorEstado', { estado });
+    CUENTAS_DATA = Array.isArray(list) ? list : [];
+    configurarTituloOrdenes();
     pintarCuentas(CUENTAS_DATA);
     actualizarResumenCuentas(CUENTAS_DATA);
   }catch(e){
     CUENTAS_DATA=[];
+    configurarTituloOrdenes();
     pintarCuentas(CUENTAS_DATA);
     actualizarResumenCuentas(CUENTAS_DATA);
     Swal.fire({icon:'error',title:'Error',text:e.message});
+  }
+}
+function configurarTituloOrdenes(){
+  const title = document.getElementById('revision-title');
+  const caption = document.getElementById('cuentas-caption');
+  if(!title || !caption) return;
+
+  if(ORDEN_MODE === 'EMISION'){
+    title.textContent = 'EMISIÓN - PRE-ORDENES PENDIENTES';
+    caption.textContent = 'N° de Pre-Ordenes Pendientes';
+  } else {
+    title.textContent = 'CUENTAS PENDIENTES DE ORDEN PAGO';
+    caption.textContent = 'N° de Cuentas Pendientes';
   }
 }
 function actualizarResumenCuentas(list){
@@ -1228,6 +1103,7 @@ function actualizarResumenCuentas(list){
   box.textContent=String(list.length);
   box.style.display='inline-block';
 }
+
 function pintarCuentas(list){
   const wrap=document.getElementById('cuentas-list');
   wrap.innerHTML='';
@@ -1247,6 +1123,23 @@ function pintarCuentas(list){
     title.textContent= (c.nombre||'');
     header.appendChild(title);
 
+    // Ícono carpeta a BH (idCuenta) a la derecha (como imagen)
+    const rightIcon = document.createElement('button');
+    rightIcon.className = 'btn-icon';
+    rightIcon.title = 'Abrir carpeta de CUENTA';
+    rightIcon.setAttribute('aria-label','Abrir carpeta de CUENTA');
+    rightIcon.innerHTML = '<img src="https://res.cloudinary.com/dqqeavica/image/upload/v1764111247/carpeta_drive_epbrhp.webp" alt="CUENTA">';
+    rightIcon.addEventListener('click', ()=>{
+      playSoundOnce(SOUNDS.login);
+      const idCuenta = String(c.idCuenta || '').trim();
+      if(idCuenta){
+        window.open('https://drive.google.com/drive/folders/' + idCuenta, '_blank');
+      }else{
+        Swal.fire({icon:'info',title:'Sin carpeta',text:'Esta cuenta no tiene id de carpeta (BH) asociado.'});
+      }
+    });
+    header.appendChild(rightIcon);
+
     const pDoc=document.createElement('p');
     pDoc.className='item-sub';
     pDoc.textContent='CC / NIT: '+(c.documento||'');
@@ -1259,49 +1152,65 @@ function pintarCuentas(list){
     pInf.className='item-sub';
     pInf.textContent='INFORME: '+(c.informe||'')+' de: '+(c.totalInformes||'');
 
+    const pFactura=document.createElement('p');
+    pFactura.className='item-sub';
+    pFactura.textContent='FACTURA ELECTRÓNICA N°: '+(c.facturaElectronica||'');
+
+    const pSup=document.createElement('p');
+    pSup.className='item-sub';
+    pSup.textContent='SUPERVISOR: '+(c.supervisorCuenta||'');
+
     const btnRow=document.createElement('div');
     btnRow.className='btn-row';
 
-    const btnRevisar=document.createElement('button');
-btnRevisar.textContent='INICIAR';
-btnRevisar.addEventListener('click', ()=>{
-  playSoundOnce(SOUNDS.login);
-  abrirRevisionCuenta(c.documento);
-});
-    btnRow.appendChild(btnRevisar);
+    const btnAccion=document.createElement('button');
+    btnAccion.textContent = (ORDEN_MODE === 'EMISION') ? 'EMITIR' : 'ORDEN CREADA';
+    btnAccion.addEventListener('click', async ()=>{
+      playSoundOnce(SOUNDS.login);
+      if(ORDEN_MODE === 'EMISION'){
+        await emitirOrdenPagoFlow(c);
+      }else{
+        await crearPreOrdenFlow(c);
+      }
+    });
+    btnRow.appendChild(btnAccion);
 
-    if (c.telefono){
-  const btnWhatsapp = document.createElement('button');
-  btnWhatsapp.className = 'btn-icon';
-  btnWhatsapp.innerHTML = '<img src="https://res.cloudinary.com/dqqeavica/image/upload/v1759166341/WhatsApp_mljaqm.webp" alt="WhatsApp">';
-  btnWhatsapp.setAttribute('aria-label','Abrir chat de WhatsApp');
-  btnWhatsapp.addEventListener('click', ()=>{
-    let tel = String(c.telefono||'').replace(/\D/g,'');
-    if(!tel){ Swal.fire({icon:'info',title:'Sin teléfono'}); return; }
-    if(!tel.startsWith('57')) tel = '57' + tel;
-    if(!/^57\d{10}$/.test(tel)){
-      Swal.fire({icon:'warning',title:'Teléfono inválido'}); return;
+    // WhatsApp solo en EMISIÓN (cuando ya se emite, se envía desde backend/flow)
+    if (c.telefono && ORDEN_MODE === 'EMISION'){
+      const btnWhatsapp = document.createElement('button');
+      btnWhatsapp.className = 'btn-icon';
+      btnWhatsapp.innerHTML = '<img src="https://res.cloudinary.com/dqqeavica/image/upload/v1759166341/WhatsApp_mljaqm.webp" alt="WhatsApp">';
+      btnWhatsapp.setAttribute('aria-label','Abrir chat de WhatsApp');
+      btnWhatsapp.addEventListener('click', ()=>{
+        let tel = String(c.telefono||'').replace(/\D/g,'');
+        if(!tel){ Swal.fire({icon:'info',title:'Sin teléfono'}); return; }
+        if(!tel.startsWith('57')) tel = '57' + tel;
+        if(!/^57\d{10}$/.test(tel)){
+          Swal.fire({icon:'warning',title:'Teléfono inválido'}); return;
+        }
+        window.open('https://wa.me/'+tel,'_blank');
+      });
+      btnRow.appendChild(btnWhatsapp);
     }
-    window.open('https://wa.me/'+tel,'_blank');
-  });
-  btnRow.appendChild(btnWhatsapp);
-}
 
     div.appendChild(header);
     div.appendChild(pDoc);
     div.appendChild(pContrato);
     div.appendChild(pInf);
+    div.appendChild(pFactura);
+    div.appendChild(pSup);
     div.appendChild(btnRow);
     wrap.appendChild(div);
   }
 }
+
 document.getElementById('cuentas-filter').addEventListener('input',()=>{
   const qRaw = document.getElementById('cuentas-filter').value.trim().toLowerCase();
   const digits = qRaw.replace(/\D/g,'');
   const buscarDocumento = digits.length >= 5;
 
   const filtered = CUENTAS_DATA.filter(c=>{
-    const base = [c.nombre,c.informe,c.totalInformes,c.contrato]
+    const base = [c.nombre,c.informe,c.totalInformes,c.contrato,c.facturaElectronica,c.supervisorCuenta]
       .some(v=>String(v||'').toLowerCase().includes(qRaw));
 
     if(base) return true;
@@ -1320,9 +1229,79 @@ document.getElementById('revision-volver').addEventListener('click', ()=>{
   showView('view-inicio');
 });
 
-/* ================== REVISAR CUENTA (Detalle) ================== */
+/* ================== FLOW 1: CREAR PRE-ORDEN ================== */
+async function crearPreOrdenFlow(c){
+  // Alerta basada en tu antigua de Guardar, adaptada a "GUARDAR ORDEN"
+  const nombre = c.nombre || '';
+  const informe = c.informe || '';
+  const total = c.totalInformes || '';
+  const cuentaText = String(informe) + ' de ' + String(total);
 
-  function resetSeccionesRevision(){
+  const rs = await Swal.fire({
+    icon:'success',
+    title:`Cuenta N° ${informe} de ${nombre}`,
+    text:'Toma una de las opciones.',
+    showCancelButton:true,
+    confirmButtonText:'GUARDAR ORDEN',
+    cancelButtonText:'Cancelar'
+  });
+
+  if(!rs.isConfirmed) return;
+
+  try{
+    await apiPost('crearPreOrden', {
+      documento: c.documento,
+      informe: c.informe,
+      responsable: currentUser?.profesional || ''
+    });
+
+    Swal.fire({icon:'success',title:'Pre-Orden creada',timer:1600,showConfirmButton:false});
+
+    await cargarCuentasPendientes(); // refresca (ya no debe aparecer en CERRADA)
+    showView('view-revision');
+  }catch(e){
+    Swal.fire({icon:'error',title:'Error',text:e.message});
+  }
+}
+
+/* ================== FLOW 2: EMITIR ORDEN DE PAGO ================== */
+async function emitirOrdenPagoFlow(c){
+  const documento = c.documento;
+  const nombre = c.nombre || '';
+  const informe = c.informe || '';
+
+  const rs = await Swal.fire({
+    icon:'success',
+    title:`Pre-Orden N° ${informe} de ${nombre}`,
+    text:'¿Deseas EMITIR la Orden de Pago?',
+    showCancelButton:true,
+    confirmButtonText:'EMITIR',
+    cancelButtonText:'Cancelar'
+  });
+
+  if(!rs.isConfirmed) return;
+
+  try{
+    // Backend: cambia BJ a ORDEN DE PAGO y marca ORDENES F=EMITIDO, y envía whatsapp
+    await apiPost('emitirOrdenPagoV2', {
+      documento,
+      informe,
+      responsable: currentUser?.profesional || ''
+    });
+
+    Swal.fire({icon:'success',title:'Orden de Pago Emitida',timer:1800,showConfirmButton:false});
+    await cargarCuentasPendientes();
+    showView('view-revision');
+  }catch(e){
+    Swal.fire({icon:'error',title:'Error',text:e.message});
+  }
+}
+
+/* ================== REVISAR CUENTA (Detalle) ================== */
+/* Se deja intacto tu módulo de revisar-cuenta para no afectar lógica existente.
+   OJO: el listado ya no navega aquí; se conserva por compatibilidad. */
+
+function resetSeccionesRevision(){
   const parts = [
     { sec:'sec-contrato',   btn:'btn-toggle-contrato',  label:'Ver Información del Contrato' },
     { sec:'sec-informe',    btn:'btn-toggle-informe',   label:'Ver Relación de Informe y Pago' },
@@ -1332,11 +1311,11 @@ document.getElementById('revision-volver').addEventListener('click', ()=>{
   parts.forEach(({sec, btn, label})=>{
     const s = document.getElementById(sec);
     const b = document.getElementById(btn);
-    if (s) s.classList.add('hidden');   // asegura cerrado
-    if (b) b.textContent = label;       // restaura el texto "Ver ..."
+    if (s) s.classList.add('hidden');
+    if (b) b.textContent = label;
   });
 }
-  
+
 let REV_CUENTA=null;
 async function abrirRevisionCuenta(documento){
   try{
@@ -1418,32 +1397,31 @@ function renderRevisionCuenta(){
     `<p><b>APORTES FPS:</b> ${cu?.solidario2||''} ${cu?.aporte2||''}</p>`
   ].join('');
 
-    // === Mostrar/ocultar y parametrizar botón "CUENTA" (debajo de Actividades) ===
-const cuentaBtn = document.getElementById('btn-abrir-carpeta-cuenta');
-if (cu?.informe && c?.carpetaContratista){
-  cuentaBtn.classList.remove('hidden');
-  cuentaBtn.dataset.parent  = c.carpetaContratista;          // carpeta del contratista (padre)
-  cuentaBtn.dataset.informe = String(cu.informe).trim();      // número de informe
-  if (cu?.idCuenta){                                         // ID directo de la subcarpeta (BH)
-    cuentaBtn.dataset.subId = String(cu.idCuenta).trim();
+  const cuentaBtn = document.getElementById('btn-abrir-carpeta-cuenta');
+  if (cu?.informe && c?.carpetaContratista){
+    cuentaBtn.classList.remove('hidden');
+    cuentaBtn.dataset.parent  = c.carpetaContratista;
+    cuentaBtn.dataset.informe = String(cu.informe).trim();
+    if (cu?.idCuenta){
+      cuentaBtn.dataset.subId = String(cu.idCuenta).trim();
+    } else {
+      delete cuentaBtn.dataset.subId;
+    }
   } else {
+    cuentaBtn.classList.add('hidden');
+    delete cuentaBtn.dataset.parent;
+    delete cuentaBtn.dataset.informe;
     delete cuentaBtn.dataset.subId;
   }
-} else {
-  cuentaBtn.classList.add('hidden');
-  delete cuentaBtn.dataset.parent;
-  delete cuentaBtn.dataset.informe;
-  delete cuentaBtn.dataset.subId;
 }
-  
+
 document.getElementById('rc-volver').addEventListener('click', ()=>{
   playSoundOnce(SOUNDS.back);
-  resetSeccionesRevision();     // cierra cualquier sección abierta
-  showView('view-revision');    // vuelve a la lista
+  resetSeccionesRevision();
+  showView('view-revision');
 });
 
-
-// Abrir directamente la subcarpeta "CUENTA <informe>" usando su ID (BH->idCuenta)
+// Abrir carpeta CUENTA en Drive
 const btnAbrirCarpetaCuenta = document.getElementById('btn-abrir-carpeta-cuenta');
 btnAbrirCarpetaCuenta.addEventListener('click', ()=>{
   playSoundOnce(SOUNDS.login);
@@ -1455,8 +1433,6 @@ btnAbrirCarpetaCuenta.addEventListener('click', ()=>{
     window.open('https://drive.google.com/drive/folders/' + subId, '_blank');
     return;
   }
-
-  // Fallback solo si no llegó BH: abre la carpeta del contratista
   if (parentId){
     Swal.fire({ icon:'info', title:'Falta id de CUENTA', text:'Se abrirá la carpeta del contratista.' });
     window.open('https://drive.google.com/drive/folders/' + parentId, '_blank');
@@ -1464,72 +1440,8 @@ btnAbrirCarpetaCuenta.addEventListener('click', ()=>{
     Swal.fire({ icon:'info', title:'Sin carpeta', text:'Este contratista no tiene "carpetaContratista" asociada.' });
   }
 });
-  
-document.getElementById('rc-guardar').addEventListener('click', async ()=>{
-  if(!REV_CUENTA?.cuenta){
-    Swal.fire({icon:'warning',title:'Sin cuenta cargada'});
-    return;
-  }
 
-  const documento = REV_CUENTA.contratista.documento;
-  const nombre    = REV_CUENTA.contratista.nombre;
-  const informe   = REV_CUENTA.cuenta.informe;
-
-  const telContratistaRaw = REV_CUENTA.contratista.telefono;
-  const telContratista = normalizeContratistaNumber(telContratistaRaw);
-
-  const TESORERIA_GROUP_ID = 'KQyQKkptgOI56Qbn6gsJUh'; /*Grupo de tesorería*/
-
-  const rs = await Swal.fire({
-    icon:'success',
-    title:`Cuenta N° ${informe} de ${nombre}`,
-    text:'Toma una de las opciones.',
-    showCancelButton:true,
-    confirmButtonText:'EMITIR',
-    cancelButtonText:'Cancelar'
-  });
-
-  function msgOrdenPagoContratista(){
-    return (
-      '> Estado 4️⃣\n' +
-      'Estimado(a) *'+nombre+'*\n\n' +
-      '¡Ha sido emitada la orden de pago de tu *Cuenta N° '+informe+'*\n' +
-      'El equipo de *Tesoría* revisará la información para generar el Egreso y Pago de tus honorarios.\n' +
-      '> Recuerda que, el proceso se realiza en orden de solicitudes. Agradecemos tu comprensión\n\n' +
-      'Cordialmente,\n\n*Equipo de Contabilidad*\n> Alcaldía de Flandes'
-    );
-  }
-
-  function msgOrdenPagoTesoreria(){
-    return (
-      'Estimado Equipo de Tesorería\n\n' +
-      'Se ha generado la *Orden de Pago* de la *Cuenta N° '+informe+'* del contratista *'+nombre+'*\n\n' +
-      'Por favor revisar para generar Egreso.\n\n' +
-      'Cordialmente,\n\n*Equipo de Contabilidad*'
-    );
-  }
-
-  if(rs.isConfirmed){
-    try{
-      await apiPost('emitirOrdenPago',{ documento, informe });
-
-      if(telContratista){
-        sendBuilderbotMessage(telContratista, msgOrdenPagoContratista());
-      }
-
-      sendBuilderbotMessage(TESORERIA_GROUP_ID, msgOrdenPagoTesoreria());
-
-      Swal.fire({icon:'success',title:'Orden de Pago Emitida',timer:1800,showConfirmButton:false});
-      await cargarCuentasPendientes();
-      showView('view-revision');
-    }catch(e){
-      Swal.fire({icon:'error',title:'Error',text:e.message});
-    }
-  }
-});
-  }
-
-  function initRevisionToggleSections(){
+function initRevisionToggleSections(){
   const defs = [
     ['btn-toggle-contrato','sec-contrato','Ver Información del Contrato','Ocultar Información del Contrato'],
     ['btn-toggle-informe','sec-informe','Ver Relación de Informe y Pago','Ocultar Relación de Informe y Pago'],
@@ -1540,7 +1452,7 @@ document.getElementById('rc-guardar').addEventListener('click', async ()=>{
     const btn = document.getElementById(btnId);
     const sec = document.getElementById(secId);
     if(!btn || !sec) return;
-    if(btn.dataset.bound) return;  // evita duplicados
+    if(btn.dataset.bound) return;
     btn.dataset.bound = '1';
     btn.addEventListener('click',()=>{
       const visible = !sec.classList.contains('hidden');
@@ -1555,8 +1467,7 @@ document.getElementById('rc-guardar').addEventListener('click', async ()=>{
   });
 }
 initRevisionToggleSections();
-  
-  
+
 /* ================== REQUERIMIENTOS ================== */
 let REQ_DATA=[];
 async function cargarRequerimientosBase(){
@@ -1604,11 +1515,11 @@ function pintarRequerimientos(list){
     btnRow.className='btn-row';
 
     const btnRedact=document.createElement('button');
-btnRedact.textContent='REDACTAR';
-btnRedact.addEventListener('click', ()=>{
-  playSoundOnce(SOUNDS.login);
-  abrirModalRequerimiento(c);
-});
+    btnRedact.textContent='REDACTAR';
+    btnRedact.addEventListener('click', ()=>{
+      playSoundOnce(SOUNDS.login);
+      abrirModalRequerimiento(c);
+    });
 
     btnRow.appendChild(btnRedact);
     div.appendChild(btnRow);
@@ -1646,22 +1557,19 @@ document.getElementById('modal-req-enviar').addEventListener('click',()=>{
   if(!txt){
     Swal.fire({icon:'warning',title:'Texto requerido'}); return;
   }
-  // Normaliza el teléfono (agrega 57 si viene a 10 dígitos y valida)
-const telefonoNormalizado = normalizeContratistaNumber(MODAL_TARGET.telefono);
-const nombre = (MODAL_TARGET.nombre || '').trim();
+  const telefonoNormalizado = normalizeContratistaNumber(MODAL_TARGET.telefono);
+  const nombre = (MODAL_TARGET.nombre || '').trim();
 
-// Mensaje EXACTO solicitado
-const mensaje = 
-  'Estimado(a) *' + nombre + '*\n\n' +
-  'Tenemos el siguiente requerimiento:\n\n*' + txt + '*\n\n' +
-  'Cordialmente,\n\n*Equipo de Contabilidad*\n> Alcaldía de Flandes';
+  const mensaje =
+    'Estimado(a) *' + nombre + '*\n\n' +
+    'Tenemos el siguiente requerimiento:\n\n*' + txt + '*\n\n' +
+    'Cordialmente,\n\n*Equipo de Contabilidad*\n> Alcaldía de Flandes';
 
-if (telefonoNormalizado){
-  sendBuilderbotMessage(telefonoNormalizado, mensaje);
-} else {
-  // Si el número no es válido, avisa al usuario
-  Swal.fire({ icon:'warning', title:'Teléfono inválido', text:'No se pudo enviar el requerimiento por WhatsApp.' });
-}
+  if (telefonoNormalizado){
+    sendBuilderbotMessage(telefonoNormalizado, mensaje);
+  } else {
+    Swal.fire({ icon:'warning', title:'Teléfono inválido', text:'No se pudo enviar el requerimiento por WhatsApp.' });
+  }
   document.getElementById('modal-requerimiento').classList.add('hidden');
   Swal.fire({icon:'success',title:'Requerimiento enviado',timer:1800,showConfirmButton:false});
 });
@@ -1711,10 +1619,10 @@ document.getElementById('soporte-volver').addEventListener('click', ()=>{
   showView('view-inicio');
 });
 
-/* ================== PWA AVANZADO ================== */
+/* ================== PWA AVANZADO (igual) ================== */
 let deferredPrompt = null;
-let __installStartShown = false;    // bandera: ya mostramos "App instalándose"
-let __installSuccessShown = false;  // bandera: ya mostramos "Instalación exitosa"
+let __installStartShown = false;
+let __installSuccessShown = false;
 
 function isStandalone(){
   const dmStandalone = window.matchMedia('(display-mode: standalone)').matches;
@@ -1775,60 +1683,57 @@ window.addEventListener('appinstalled', ()=>{
 });
 
 document.getElementById('btn-instalar').addEventListener('click', async ()=>{
-  // Flujo iOS: se respeta exactamente tu alerta e instrucciones
   if(isIOS()){
     Swal.fire({
       icon:'info',
       title: '¡Para Instalar en tu Iphone!',
-  html: `
-    <div style="text-align:center; margin-top:8px;">
-      <img
-        src="https://res.cloudinary.com/dqqeavica/image/upload/v1765745210/instalacion_ios_ysbhnd.gif"
-        alt="Instalación de IOS"
-        style="width:180px; max-width:70vw; height:auto; display:block; margin:0 auto 12px;"
-      >
-      <div style="margin-top:10px;">
-        <b>1.</b> Toca Compartir.<br><b>2.</b> Elige "Agregar a pantalla de inicio".<br><b>3.</b> Confirma "Agregar".
-      </div>
-    </div>
-  `,
+      html: `
+        <div style="text-align:center; margin-top:8px;">
+          <img
+            src="https://res.cloudinary.com/dqqeavica/image/upload/v1765745210/instalacion_ios_ysbhnd.gif"
+            alt="Instalación de IOS"
+            style="width:180px; max-width:70vw; height:auto; display:block; margin:0 auto 12px;"
+          >
+          <div style="margin-top:10px;">
+            <b>1.</b> Toca Compartir.<br><b>2.</b> Elige "Agregar a pantalla de inicio".<br><b>3.</b> Confirma "Agregar".
+          </div>
+        </div>
+      `,
     });
     return;
   }
-  // Android: requiere beforeinstallprompt (deferredPrompt)
   if(!deferredPrompt){
     Swal.fire({icon:'info',title:'Instalación no disponible todavía'});
     return;
   }
 
   const dp = deferredPrompt;
-  dp.prompt();                           // muestra diálogo nativo de instalación
-  const choice = await dp.userChoice;    // espera la elección del usuario
-  deferredPrompt = null;                 // limpia el prompt (solo se usa una vez)
+  dp.prompt();
+  const choice = await dp.userChoice;
+  deferredPrompt = null;
 
   if (choice.outcome === 'accepted'){
-    // Primera alerta (Android): confirma inicio de instalación por 6 segundos
     markInstalled();
     __installStartShown = true;
     Swal.fire({
-  icon: 'success',
-  title: '¡App instalándose!',
-  html: `
-    <div style="text-align:center; margin-top:8px;">
-      <img
-        src="https://res.cloudinary.com/dqqeavica/image/upload/v1765740540/instalacion_lydtcl.gif"
-        alt="Instalando app"
-        style="width:180px; max-width:70vw; height:auto; display:block; margin:0 auto 12px;"
-      >
-      <div>Debes esperar unos segundos mientras el sistema instala la App.</div>
-      <div style="margin-top:10px;">
-        <b>Al desaparecer este aviso, puedes salir de esta vista. La App aparecerá en la pantalla principal de este dispositivo.</b>
-      </div>
-    </div>
-  `,
-  timer: 12000,
-  showConfirmButton: false
-});
+      icon: 'success',
+      title: '¡App instalándose!',
+      html: `
+        <div style="text-align:center; margin-top:8px;">
+          <img
+            src="https://res.cloudinary.com/dqqeavica/image/upload/v1765740540/instalacion_lydtcl.gif"
+            alt="Instalando app"
+            style="width:180px; max-width:70vw; height:auto; display:block; margin:0 auto 12px;"
+          >
+          <div>Debes esperar unos segundos mientras el sistema instala la App.</div>
+          <div style="margin-top:10px;">
+            <b>Al desaparecer este aviso, puedes salir de esta vista. La App aparecerá en la pantalla principal de este dispositivo.</b>
+          </div>
+        </div>
+      `,
+      timer: 12000,
+      showConfirmButton: false
+    });
   } else {
     Swal.fire({icon:'info',title:'Instalación cancelada'});
   }
@@ -1851,7 +1756,6 @@ if ('serviceWorker' in navigator){
   });
 }
 window.addEventListener('load', initPWAVista);
-  
 
 /* ================== FIN ================== */
 </script>
