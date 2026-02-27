@@ -337,26 +337,47 @@
     .contr-actions .left-group > button{ flex: 1 1 100%; }
   }
 
-    /* === NUEVO: layout del header en tarjetas de ORDENES para que la carpeta NO desacomode === */
+ /* === Header ORDENES: nombre + carpeta pegada a la esquina y sin espacio extra abajo === */
 .item-header.orden-header{
   display:flex;
-  align-items:flex-start;        /* como tu referencia: icono arriba a la derecha */
+  align-items:flex-start;
   justify-content:space-between;
   gap:10px;
+  margin-bottom:0;
+  padding-bottom:0;
 }
+
 .item-header.orden-header .item-title{
   flex:1 1 auto;
   min-width:0;
+  margin:0;              /* quita el margen que genera el “espacio” */
+  line-height:1.15;
 }
+
 .item-header.orden-header .orden-folder{
   flex:0 0 auto;
   margin-left:10px;
-  padding:0 !important;          /* evita que “empuje” el contenido */
+  padding:0 !important;
+  position:relative;
+  top:0;
+  right:0;
 }
+
 .item-header.orden-header .orden-folder img{
-  width:46px !important;         /* tamaño tipo referencia */
+  width:46px !important;
   height:46px !important;
+  display:block;
   filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
+}
+
+/* quita el espacio entre NOMBRE y CC/NIT SOLO en tarjetas de ORDENES */
+.item-card .item-header.orden-header + .item-sub{
+  margin-top:0 !important;
+}
+
+#cuentas-list .item-sub{
+  margin:0 !important;
+  line-height:1.25;
 }
 </style>
 </head>
