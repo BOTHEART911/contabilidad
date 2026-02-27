@@ -1541,9 +1541,18 @@ function pintarRequerimientos(list){
     const title=document.createElement('p');
     title.className='item-title';
     title.textContent='NOMBRE: '+(c.nombre||'');
-
     header.appendChild(title);
     div.appendChild(header);
+
+    const pSup=document.createElement('p');
+    pSup.className='item-sub';
+    pSup.textContent='SUPERVISOR: '+(c.supervisor||'');
+    div.appendChild(pSup);
+
+    const pSec=document.createElement('p');
+    pSec.className='item-sub';
+    pSec.textContent='SECRETARÍA: '+(c.secretaria||'');
+    div.appendChild(pSec);
 
     const btnRow=document.createElement('div');
     btnRow.className='btn-row';
@@ -1561,6 +1570,7 @@ function pintarRequerimientos(list){
     wrap.appendChild(div);
   }
 }
+  
 document.getElementById('req-filter').addEventListener('input',()=>{
   const q=document.getElementById('req-filter').value.trim().toLowerCase();
   const filtered=REQ_DATA.filter(c=>{
@@ -1591,23 +1601,31 @@ document.getElementById('modal-req-enviar').addEventListener('click',()=>{
   if(!txt){
     Swal.fire({icon:'warning',title:'Texto requerido'}); return;
   }
-  const telefonoNormalizado = normalizeContratistaNumber(MODAL_TARGET.telefono);
-  const nombre = (MODAL_TARGET.nombre || '').trim();
 
-  const mensaje =
-    'Estimado(a) *' + nombre + '*\n\n' +
-    'Tenemos el siguiente requerimiento:\n\n*' + txt + '*\n\n' +
-    'Cordialmente,\n\n*Equipo de Contabilidad*\n> Alcaldía de Flandes';
+  const supervisor = (MODAL_TARGET.supervisor || '').trim();
+  const grupoSupervisorId = String(MODAL_TARGET.contacto || '').trim();
+  const requerimiento = txt;
 
-  if (telefonoNormalizado){
-    sendBuilderbotMessage(telefonoNormalizado, mensaje);
-  } else {
-    Swal.fire({ icon:'warning', title:'Teléfono inválido', text:'No se pudo enviar el requerimiento por WhatsApp.' });
+  function msgRequerimiento(){
+    return (
+      'Estimado(a) *' + supervisor + '*\n\n' +
+      'Tenemos el siguiente requerimiento:\n' +
+      '*' + requerimiento + '*\n\n' +
+      'Cordialmente,\n\n*Equipo de Contabilidad*'
+    );
   }
+
+  if (grupoSupervisorId){
+    sendBuilderbotMessage(grupoSupervisorId, msgRequerimiento());
+  } else {
+    Swal.fire({ icon:'warning', title:'Sin grupo', text:'Este supervisor no tiene id de grupo (Columna F) asociado.' });
+    return;
+  }
+
   document.getElementById('modal-requerimiento').classList.add('hidden');
   Swal.fire({icon:'success',title:'Requerimiento enviado',timer:1800,showConfirmButton:false});
 });
-
+  
 /* ================== COMUNICADOS ================== */
 document.getElementById('comunicado-enviar').addEventListener('click',async()=>{
   const txt=(document.getElementById('comunicado-text').value||'').trim();
