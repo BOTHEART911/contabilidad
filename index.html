@@ -1295,43 +1295,50 @@ function pintarCuentas(list){
     pRad.textContent='FECHA DE RADICACIÓN: '+(c.fechaRadicacion||'');
 
     // ✅ NUEVO: Input requerido N° ORDEN (6 dígitos exactos)
-    const labelOrden = document.createElement('label');
-    labelOrden.textContent = 'N° ORDEN DE PAGO (6 dígitos)';
+     let labelOrden = null;
+    let inputOrden = null;
 
-    const inputOrden = document.createElement('input');
-    inputOrden.className = 'op-input';
-    inputOrden.type = 'text';
-    inputOrden.inputMode = 'numeric';
-    inputOrden.autocomplete = 'off';
-    inputOrden.placeholder = '000000';
-    inputOrden.maxLength = 6;
-    inputOrden.value = String(c.ordenPago || '');
+    if (ORDEN_MODE !== 'EMISION') {
+      labelOrden = document.createElement('label');
+      labelOrden.textContent = 'N° ORDEN DE PAGO (6 dígitos)';
 
-    inputOrden.addEventListener('input', ()=>{
-      // solo dígitos
-      let v = String(inputOrden.value || '').replace(/\D/g,'').slice(0,6);
-      inputOrden.value = v;
-      c.ordenPago = v; // guardar en memoria (para el flujo)
-    });
+      inputOrden = document.createElement('input');
+      inputOrden.className = 'op-input';
+      inputOrden.type = 'text';
+      inputOrden.inputMode = 'numeric';
+      inputOrden.autocomplete = 'off';
+      inputOrden.placeholder = '000000';
+      inputOrden.maxLength = 6;
+      inputOrden.value = String(c.ordenPago || '');
+
+      inputOrden.addEventListener('input', ()=>{
+        // solo dígitos
+        let v = String(inputOrden.value || '').replace(/\D/g,'').slice(0,6);
+        inputOrden.value = v;
+        c.ordenPago = v; // guardar en memoria (para el flujo)
+      });
+    }
 
     const btnRow=document.createElement('div');
     btnRow.className='btn-row';
 
     const btnAccion=document.createElement('button');
     btnAccion.textContent = (ORDEN_MODE === 'EMISION') ? 'EMITIR' : 'ORDEN CREADA';
-   btnAccion.addEventListener('click', async ()=>{
+btnAccion.addEventListener('click', async ()=>{
       playSoundOnce(SOUNDS.login);
 
-      // ✅ Validación requerida 6 dígitos exactos
-      const op = String(c.ordenPago || '').trim();
-      if(!/^\d{6}$/.test(op)){
-        Swal.fire({
-          icon:'warning',
-          title:'N° ORDEN DE PAGO requerido',
-          text:'Debes ingresar exactamente 6 dígitos (ej: 000118).'
-        });
-        inputOrden.focus();
-        return;
+      // ✅ SOLO pedir N° ORDEN en modo CREACIÓN (CERRADA)
+      if (ORDEN_MODE !== 'EMISION') {
+        const op = String(c.ordenPago || '').trim();
+        if(!/^\d{6}$/.test(op)){
+          Swal.fire({
+            icon:'warning',
+            title:'N° ORDEN DE PAGO requerido',
+            text:'Debes ingresar exactamente 6 dígitos (ej: 000118).'
+          });
+          if (inputOrden) inputOrden.focus();
+          return;
+        }
       }
 
       if(ORDEN_MODE === 'EMISION'){
@@ -1349,10 +1356,14 @@ function pintarCuentas(list){
     div.appendChild(pFactura);
     div.appendChild(pSup);
 
-    // ✅ justo después de SUPERVISOR:
+     // ✅ justo después de SUPERVISOR:
     div.appendChild(pRad);
-    div.appendChild(labelOrden);
-    div.appendChild(inputOrden);
+
+    // ✅ mostrar N° ORDEN solo en CREACIÓN
+    if (ORDEN_MODE !== 'EMISION') {
+      div.appendChild(labelOrden);
+      div.appendChild(inputOrden);
+    }
 
     div.appendChild(btnRow);
     wrap.appendChild(div);
