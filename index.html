@@ -1305,7 +1305,7 @@ function pintarCuentas(list){
     inputOrden.autocomplete = 'off';
     inputOrden.placeholder = '000000';
     inputOrden.maxLength = 6;
-    inputOrden.value = String(c.ordenPago || '').padStart(6,'0');
+    inputOrden.value = String(c.ordenPago || '');
 
     inputOrden.addEventListener('input', ()=>{
       // solo dígitos
@@ -1405,9 +1405,10 @@ async function crearPreOrdenFlow(c){
     icon:'success',
     title:`Cuenta N° ${informe} de ${nombre}`,
     html:
-      `<div style="text-align:left; font-weight:700; line-height:1.35">`+
-      `<div><b>N° ORDEN DE PAGO:</b> <span style="color:#06402B">${ordenFull}</span></div>`+
-      `</div>`,
+  `<div style="text-align:center; font-weight:900; line-height:1.4">`+
+  `<div style="font-size:1.05rem; margin-top:6px;"><b>N° ORDEN DE PAGO</b></div>`+
+  `<div style="color:#06402B; font-size:1.25rem; letter-spacing:2px;">${ordenFull}</div>`+
+  `</div>`,
     showCancelButton:true,
     confirmButtonText:'GUARDAR ORDEN',
     cancelButtonText:'Cancelar'
