@@ -401,6 +401,68 @@
   object-fit:contain !important;
   filter:drop-shadow(0 2px 4px rgba(0,0,0,.25)) !important;
 }
+
+    /* === FECHA RADICACIÓN (rojo + latido) === */
+.pulse-red{
+  color:#dc2626;
+  font-weight:900;
+  animation: pulseRed 1.05s ease-in-out infinite;
+}
+@keyframes pulseRed{
+  0%   { transform: scale(1);   text-shadow: 0 0 0 rgba(220,38,38,0.0); }
+  50%  { transform: scale(1.02);text-shadow: 0 0 10px rgba(220,38,38,0.35); }
+  100% { transform: scale(1);   text-shadow: 0 0 0 rgba(220,38,38,0.0); }
+}
+
+/* === N° ORDEN (input 6 dígitos) dentro de tarjeta === */
+.op-input{
+  border: 3px solid #06402B !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  font-weight: 900 !important;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.op-input::placeholder{
+  letter-spacing: 0;
+}
+
+    /* =========================
+   MODAL REQUERIMIENTO (overlay centrado)
+   ✅ 2) REEMPLAZA TU CSS DEL MODAL (si no existe, AGREGAR)
+   ========================= */
+.modal-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 10000;
+}
+.modal-backdrop.hidden{ display:none !important; }
+
+.modal{
+  width: min(640px, 96vw);
+  background: rgba(255,255,255,.92);
+  border: 2px solid #ddd;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.25);
+  padding: 18px 18px 14px;
+  animation: modalPop .16s ease-out;
+}
+@keyframes modalPop{
+  from{ transform: translateY(10px) scale(.98); opacity: .6; }
+  to  { transform: translateY(0) scale(1); opacity: 1; }
+}
+.modal textarea{
+  border: 2px solid #06402B;
+  border-radius: 12px;
+  resize: vertical;
+  min-height: 140px;
+}
 </style>
 </head>
 <body>
@@ -1176,6 +1238,7 @@ function pintarCuentas(list){
     wrap.innerHTML='<p class="muted center">No hay cuentas pendientes.</p>';
     return;
   }
+
   for(const c of list){
     const div=document.createElement('div');
     div.className='item-card';
@@ -1226,6 +1289,31 @@ function pintarCuentas(list){
     pSup.className='item-sub';
     pSup.textContent='SUPERVISOR: '+(c.supervisorCuenta||'');
 
+    // ✅ NUEVO: FECHA DE RADICACIÓN (col F) rojo + latido
+    const pRad=document.createElement('p');
+    pRad.className='item-sub pulse-red';
+    pRad.textContent='FECHA DE RADICACIÓN: '+(c.fechaRadicacion||'');
+
+    // ✅ NUEVO: Input requerido N° ORDEN (6 dígitos exactos)
+    const labelOrden = document.createElement('label');
+    labelOrden.textContent = 'N° ORDEN DE PAGO (6 dígitos)';
+
+    const inputOrden = document.createElement('input');
+    inputOrden.className = 'op-input';
+    inputOrden.type = 'text';
+    inputOrden.inputMode = 'numeric';
+    inputOrden.autocomplete = 'off';
+    inputOrden.placeholder = '000000';
+    inputOrden.maxLength = 6;
+    inputOrden.value = String(c.ordenPago || '').padStart(6,'0');
+
+    inputOrden.addEventListener('input', ()=>{
+      // solo dígitos
+      let v = String(inputOrden.value || '').replace(/\D/g,'').slice(0,6);
+      inputOrden.value = v;
+      c.ordenPago = v; // guardar en memoria (para el flujo)
+    });
+
     const btnRow=document.createElement('div');
     btnRow.className='btn-row';
 
@@ -1233,6 +1321,19 @@ function pintarCuentas(list){
     btnAccion.textContent = (ORDEN_MODE === 'EMISION') ? 'EMITIR' : 'ORDEN CREADA';
     btnAccion.addEventListener('click', async ()=>{
       playSoundOnce(SOUNDS.login);
+
+      // ✅ Validación requerida 6 dígitos exactos
+      const op = String(c.ordenPago || '').trim();
+      if(!/^\d{6}$/.test(op)){
+        Swal.fire({
+          icon:'warning',
+          title:'N° ORDEN DE PAGO requerido',
+          text:'Debes ingresar exactamente 6 dígitos (ej: 000118).'
+        });
+        inputOrden.focus();
+        return;
+      }
+
       if(ORDEN_MODE === 'EMISION'){
         await emitirOrdenPagoFlow(c);
       }else{
@@ -1247,6 +1348,12 @@ function pintarCuentas(list){
     div.appendChild(pInf);
     div.appendChild(pFactura);
     div.appendChild(pSup);
+
+    // ✅ justo después de SUPERVISOR:
+    div.appendChild(pRad);
+    div.appendChild(labelOrden);
+    div.appendChild(inputOrden);
+
     div.appendChild(btnRow);
     wrap.appendChild(div);
   }
@@ -1279,16 +1386,28 @@ document.getElementById('revision-volver').addEventListener('click', ()=>{
 
 /* ================== FLOW 1: CREAR PRE-ORDEN ================== */
 async function crearPreOrdenFlow(c){
-  // Alerta basada en tu antigua de Guardar, adaptada a "GUARDAR ORDEN"
   const nombre = c.nombre || '';
   const informe = c.informe || '';
-  const total = c.totalInformes || '';
-  const cuentaText = String(informe) + ' de ' + String(total);
+
+  // ✅ N° orden (6 dígitos) -> mostrar con prefijo 2026 en resumen
+  const orden6 = String(c.ordenPago || '').trim();
+  if(!/^\d{6}$/.test(orden6)){
+    Swal.fire({
+      icon:'warning',
+      title:'N° ORDEN DE PAGO requerido',
+      text:'Debes ingresar exactamente 6 dígitos (ej: 000118).'
+    });
+    return;
+  }
+  const ordenFull = '2026' + orden6; // ejemplo: 2026000118
 
   const rs = await Swal.fire({
     icon:'success',
     title:`Cuenta N° ${informe} de ${nombre}`,
-    text:'Toma una de las opciones.',
+    html:
+      `<div style="text-align:left; font-weight:700; line-height:1.35">`+
+      `<div><b>N° ORDEN DE PAGO:</b> <span style="color:#06402B">${ordenFull}</span></div>`+
+      `</div>`,
     showCancelButton:true,
     confirmButtonText:'GUARDAR ORDEN',
     cancelButtonText:'Cancelar'
@@ -1300,12 +1419,13 @@ async function crearPreOrdenFlow(c){
     await apiPost('crearPreOrden', {
       documento: c.documento,
       informe: c.informe,
-      responsable: currentUser?.profesional || ''
+      responsable: currentUser?.profesional || '',
+      ordenPago: ordenFull // ✅ NUEVO: se envía al backend
     });
 
     Swal.fire({icon:'success',title:'Pre-Orden creada',timer:1600,showConfirmButton:false});
 
-    await cargarCuentasPendientes(); // refresca (ya no debe aparecer en CERRADA)
+    await cargarCuentasPendientes();
     showView('view-revision');
   }catch(e){
     Swal.fire({icon:'error',title:'Error',text:e.message});
