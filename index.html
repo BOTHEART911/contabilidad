@@ -1319,27 +1319,47 @@ function pintarCuentas(list){
 
     const btnAccion=document.createElement('button');
     btnAccion.textContent = (ORDEN_MODE === 'EMISION') ? 'EMITIR' : 'ORDEN CREADA';
-    btnAccion.addEventListener('click', async ()=>{
-      playSoundOnce(SOUNDS.login);
+   btnAccion.addEventListener('click', async ()=>{
+  playSoundOnce(SOUNDS.login);
 
-      // ✅ Validación requerida 6 dígitos exactos
-      const op = String(c.ordenPago || '').trim();
-      if(!/^\d{6}$/.test(op)){
-        Swal.fire({
-          icon:'warning',
-          title:'N° ORDEN DE PAGO requerido',
-          text:'Debes ingresar exactamente 6 dígitos (ej: 000118).'
-        });
-        inputOrden.focus();
-        return;
-      }
-
-      if(ORDEN_MODE === 'EMISION'){
-        await emitirOrdenPagoFlow(c);
-      }else{
-        await crearPreOrdenFlow(c);
-      }
+  // ✅ Validar SIEMPRE el N° ORDEN (también en EMISIÓN)
+  const op6 = String(c.ordenPago || '').trim();
+  if(!/^\d{6}$/.test(op6)){
+    Swal.fire({
+      icon:'warning',
+      title:'N° ORDEN DE PAGO requerido',
+      text:'Debes ingresar exactamente 6 dígitos (ej: 000118).'
     });
+    inputOrden.focus();
+    return;
+  }
+  const ordenFull = '2026' + op6;
+
+  // ✅ Resumen (centrado) ANTES de ejecutar la acción
+  const rs = await Swal.fire({
+    icon:'success',
+    title: (ORDEN_MODE === 'EMISION') ? 'Confirmar EMISIÓN' : 'Confirmar GUARDAR ORDEN',
+    html:
+      `<div style="text-align:center; font-weight:900; line-height:1.4">`+
+      `<div style="font-size:1.05rem; margin-top:6px;"><b>N° ORDEN DE PAGO</b></div>`+
+      `<div style="color:#06402B; font-size:1.25rem; letter-spacing:2px;">${ordenFull}</div>`+
+      `</div>`,
+    showCancelButton:true,
+    confirmButtonText: (ORDEN_MODE === 'EMISION') ? 'EMITIR' : 'GUARDAR ORDEN',
+    cancelButtonText:'Cancelar'
+  });
+  if(!rs.isConfirmed) return;
+
+  // ✅ Guardar el valor completo para enviarlo al backend cuando aplique
+  c.ordenPagoFull = ordenFull;
+
+  if(ORDEN_MODE === 'EMISION'){
+    // 🔒 IMPORTANTE: EMITIR solo cambia estado y envía mensajes (como lo pediste)
+    await emitirOrdenPagoFlow(c);
+  }else{
+    await crearPreOrdenFlow(c);
+  }
+});
     btnRow.appendChild(btnAccion);
 
     div.appendChild(header);
@@ -1399,7 +1419,7 @@ async function crearPreOrdenFlow(c){
     });
     return;
   }
-  const ordenFull = '2026' + orden6; // ejemplo: 2026000118
+  const ordenFull = String(c.ordenPagoFull || ('2026' + orden6));
 
   const rs = await Swal.fire({
     icon:'success',
