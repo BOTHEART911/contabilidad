@@ -537,13 +537,14 @@
         <p id="inicio-fecha" class="center" style="font-weight:700; font-size:.95rem;"></p>
 
         <div class="btn-row spaced">
-          <button id="go-contratistas" class="btn-primary">CONTRATISTAS</button>
-          <button id="go-revision" class="btn-primary">ORDEN DE PAGO</button>
-          <button id="go-emision" class="btn-primary hidden">EMISIÓN</button>
-          <button id="go-requerimientos" class="btn-primary">REQUERIMIENTO</button>
-          <button id="go-comunicados" class="btn-primary">COMUNICADOS</button>
-          <button id="go-soporte" class="btn-primary">SOPORTE</button>
-        </div>
+  <button id="go-contratistas" class="btn-primary">CONTRATISTAS</button>
+  <button id="go-revision" class="btn-primary">ORDEN DE PAGO</button>
+  <button id="go-emision" class="btn-primary hidden">EMISIÓN</button>
+  <button id="go-requerimientos" class="btn-primary">REQUERIMIENTO</button>
+  <button id="go-comunicados" class="btn-primary">COMUNICADOS</button>
+  <button id="go-registros" class="btn-primary">REGISTROS</button>
+  <button id="go-soporte" class="btn-primary">SOPORTE</button>
+</div>
 
         <img class="banner-bottom" alt="Banner" src="https://res.cloudinary.com/dqqeavica/image/upload/v1766347982/banner_wbfbf7.gif" />
         <p class="center muted">Copyright © <b>GOBIERNO DIGITAL</b></p>
@@ -994,6 +995,61 @@ document.getElementById('go-soporte').addEventListener('click', ()=>{
   showView('view-soporte');
 });
 
+/* ================== REGISTROS ================== */
+document.getElementById('go-registros').addEventListener('click', async ()=>{
+  // sonido al presionar
+  playSoundOnce(SOUNDS.login);
+
+  const name = String(currentUser?.profesional || '').trim().toUpperCase();
+
+  const LINKS = {
+    'GLORIA HERRERA': 'https://docs.google.com/spreadsheets/d/1oAQA8QW-Aqt2nA2-603A6tNDNopVI1EOGCyA-6x5GcU/edit?usp=sharing',
+    'OLGA ALCENDRA':  'https://docs.google.com/spreadsheets/d/1sUzFM-Xvs9ngyq0MhgIJ6fkU9SJEuZbJ9pO8mgRN39g/edit?usp=sharing',
+    'DIANA ROJAS':    'https://docs.google.com/spreadsheets/d/1CE3qognKSCOSwnMHmUnF4lBVo3sGPiFFBgZD8S396cM/edit?usp=sharing',
+  };
+
+  // Casos directos
+  if (LINKS[name]){
+    window.open(LINKS[name], '_blank');
+    return;
+  }
+
+  // Sandra / Oscar -> elegir entre las 3 opciones
+  if (name === 'SANDRA CASTILLO' || name === 'OSCAR POLANIA'){
+    const rs = await Swal.fire({
+      icon: 'info',
+      title: 'Selecciona el Registro',
+      text: 'Elige cuál archivo deseas abrir',
+      showCancelButton: true,
+      showDenyButton: true,
+      confirmButtonText: 'GLORIA HERRERA',
+      denyButtonText: 'OLGA ALCENDRA',
+      cancelButtonText: 'DIANA ROJAS'
+    });
+
+    if (rs.isConfirmed){
+      window.open(LINKS['GLORIA HERRERA'], '_blank');
+      return;
+    }
+    if (rs.isDenied){
+      window.open(LINKS['OLGA ALCENDRA'], '_blank');
+      return;
+    }
+    if (rs.dismiss === Swal.DismissReason.cancel){
+      window.open(LINKS['DIANA ROJAS'], '_blank');
+      return;
+    }
+    return;
+  }
+
+  // No autorizado
+  Swal.fire({
+    icon:'warning',
+    title:'Sin acceso',
+    text:'No tienes permisos para abrir REGISTROS.'
+  });
+});
+  
 /* ================== CONTRATISTAS ================== */
 let CONTR_DATA=[];
 async function cargarContratistas(){
