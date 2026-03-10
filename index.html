@@ -463,6 +463,30 @@
   resize: vertical;
   min-height: 140px;
 }
+    /* ✅ Estado pendiente (borde rojo en tarjetas de CUENTAS) */
+.item-card.pending{
+  border-color:#dc2626 !important;
+  box-shadow:0 8px 20px rgba(220,38,38,.25) !important;
+}
+
+/* ✅ Botón GO/STOP (mismo tamaño que carpeta, arriba derecha) */
+.item-card .item-header.orden-header .orden-toggle{
+  flex:0 0 auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  width:auto !important;
+  position:absolute !important;
+  top:14px !important;
+  right:70px !important; /* queda a la izquierda de la carpeta */
+}
+
+#cuentas-list .item-header.orden-header .orden-toggle img{
+  width:46px !important;
+  height:46px !important;
+  display:block !important;
+  object-fit:contain !important;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.25)) !important;
+}
 </style>
 </head>
 <body>
@@ -1297,7 +1321,11 @@ function pintarCuentas(list){
 
   for(const c of list){
     const div=document.createElement('div');
-    div.className='item-card';
+div.className='item-card';
+
+// ✅ borde rojo si viene marcado desde backend (col DR)
+const isPend = String(c.pendiente || '').trim().toUpperCase() === 'PENDIENTE';
+if(isPend) div.classList.add('pending');
 
     const header=document.createElement('div');
     header.className='item-header orden-header';
@@ -1323,6 +1351,37 @@ function pintarCuentas(list){
       }
     });
     header.appendChild(folderBtn);
+
+
+    // ✅ Botón GO/STOP (solo en vista CUENTAS PENDIENTES = modo CREACION)
+if (ORDEN_MODE !== 'EMISION') {
+  const toggleBtn = document.createElement('button');
+  toggleBtn.className = 'btn-icon orden-toggle';
+  toggleBtn.title = 'Marcar / Desmarcar PENDIENTE';
+  toggleBtn.setAttribute('aria-label','Marcar o desmarcar PENDIENTE');
+
+  const IMG_GO   = 'https://res.cloudinary.com/dqqeavica/image/upload/v1773101576/go_rsuqri.png';
+  const IMG_STOP = 'https://res.cloudinary.com/dqqeavica/image/upload/v1773101575/stop_beqe4k.webp';
+
+  // estado inicial según backend
+  toggleBtn.innerHTML = '<img src="' + (isPend ? IMG_STOP : IMG_GO) + '" alt="PENDIENTE">';
+
+  toggleBtn.addEventListener('click', async ()=>{
+    playSoundOnce(SOUNDS.login);
+
+    const nextPend = !div.classList.contains('pending');
+    try{
+      await setCuentaPendiente(c.documento, c.informe, nextPend);
+      // refrescar para que vuelva a pintar borde rojo / imagen
+      await cargarCuentasPendientes();
+      showView('view-revision');
+    }catch(e){
+      Swal.fire({ icon:'error', title:'Error', text: e.message });
+    }
+  });
+
+  header.appendChild(toggleBtn);
+}
 
     const pDoc=document.createElement('p');
     pDoc.className='item-sub';
@@ -1902,6 +1961,11 @@ document.getElementById('soporte-volver').addEventListener('click', ()=>{
   showView('view-inicio');
 });
 
+    /* ================== GO / STOP ================== */
+async function setCuentaPendiente(documento, informe, pendiente){
+  return apiPost('setCuentaPendiente', { documento, informe, pendiente: !!pendiente });
+}
+
 /* ================== PWA AVANZADO (igual) ================== */
 let deferredPrompt = null;
 let __installStartShown = false;
@@ -2039,6 +2103,7 @@ if ('serviceWorker' in navigator){
   });
 }
 window.addEventListener('load', initPWAVista);
+
 
 /* ================== FIN ================== */
 </script>
