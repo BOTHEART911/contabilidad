@@ -1894,12 +1894,14 @@ document.getElementById('modal-req-enviar').addEventListener('click',()=>{
 
   const supervisor = (MODAL_TARGET.supervisor || '').trim();
   const grupoSupervisorId = String(MODAL_TARGET.contacto || '').trim();
+  const nombre = (MODAL_TARGET?.nombre || '').trim();
   const requerimiento = txt;
 
-  function msgRequerimiento(){
+ function msgRequerimiento(){
     return (
+      '*🛑 CUENTA DETENIDA EN CONTABILIDAD 🛑*\n' +
       'Estimado(a) *' + supervisor + '*\n\n' +
-      'Tenemos el siguiente requerimiento:\n' +
+      'Tenemos el siguiente requerimiento con respecto al contratista *' + nombre + ':*\n' +
       '*' + requerimiento + '*\n\n' +
       'Cordialmente,\n\n*Equipo de Contabilidad*'
     );
