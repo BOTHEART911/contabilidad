@@ -1193,7 +1193,7 @@ function updateEmisionButtonVisibility(){
   const btn = document.getElementById('go-emision');
   if(!btn) return;
   const name = String(currentUser?.profesional || '').trim().toUpperCase();
-  const allowed = (name === 'OSCAR POLANIA' || name === 'SANDRA CASTILLO');
+  const allowed = (name === 'OSCAR POLANIA' || name === 'CARLOS CASTILLO');
   btn.classList.toggle('hidden', !allowed);
 }
 
@@ -1276,7 +1276,7 @@ document.getElementById('go-registros').addEventListener('click', async ()=>{
   }
 
   // Sandra / Oscar -> elegir entre las 3 opciones
-  if (name === 'SANDRA CASTILLO' || name === 'OSCAR POLANIA'){
+  if (name === 'CARLOS CUEVAS' || name === 'OSCAR POLANIA'){
     const rs = await Swal.fire({
       icon: 'info',
       title: 'Selecciona el Registro',
