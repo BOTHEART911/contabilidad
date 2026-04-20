@@ -1193,7 +1193,7 @@ function updateEmisionButtonVisibility(){
   const btn = document.getElementById('go-emision');
   if(!btn) return;
   const name = String(currentUser?.profesional || '').trim().toUpperCase();
-  const allowed = (name === 'OSCAR POLANIA' || name === 'CARLOS CUEVAS');
+  const allowed = (name === 'OSCAR POLANIA' || name === 'CARLOS CUEVAS' || name === 'GLORIA HERRERA');
   btn.classList.toggle('hidden', !allowed);
 }
 
