@@ -560,13 +560,26 @@ async function cargarCuentasPendientes(){
     const list = await apiGet('listCuentasPorEstado', { estado });
     CUENTAS_DATA = Array.isArray(list) ? list : [];
 
-    // Priorizar a OSCAR MAURICIO POLANIA GUERRA en CUENTAS PENDIENTES y EMISIÓN
+    // Priorizar a OSCAR MAURICIO POLANIA GUERRA + ordenar por Fecha de Radicación (más antigua primero)
     if (ORDEN_MODE === 'CREACION' || ORDEN_MODE === 'EMISION'){
       const PRIORITARIO = 'OSCAR MAURICIO POLANIA GUERRA';
+
+      // Fecha de radicación en formato DD/MM/YYYY o DD-MM-YYYY
+      const parseFechaRad = (val) => {
+        const s = String(val || '').trim();
+        if (!s) return Infinity; // sin fecha -> al final del grupo
+        const m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+        if (!m) return Infinity;
+        return new Date(+m[3], +m[2]-1, +m[1]).getTime();
+      };
+
       CUENTAS_DATA.sort((a, b) => {
         const aPrio = String(a.nombre || '').trim().toUpperCase() === PRIORITARIO ? 0 : 1;
         const bPrio = String(b.nombre || '').trim().toUpperCase() === PRIORITARIO ? 0 : 1;
-        return aPrio - bPrio;
+        // 1) Oscar arriba
+        if (aPrio !== bPrio) return aPrio - bPrio;
+        // 2) Dentro del mismo grupo: fecha radicación ascendente (más antigua primero)
+        return parseFechaRad(a.fechaRadicacion) - parseFechaRad(b.fechaRadicacion);
       });
     }
 
