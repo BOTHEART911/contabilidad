@@ -888,8 +888,7 @@ async function emitirOrdenPagoFlow(c){
       '> Estado 4️⃣\n' +
       'Estimado(a) *'+nombre+'*\n\n' +
       '¡Ha sido emitada la orden de pago de tu *Cuenta N° '+informe+'*\n' +
-      'El equipo de *Tesoría* revisará la información para generar el Egreso y Pago de tus honorarios.\n' +
-      '> Recuerda que, el proceso se realiza en orden de solicitudes. Agradecemos tu comprensión\n\n' +
+      'El equipo de *Tesoría* en sus tiempos, revisará para generar el Egreso y Pago de tus honorarios.\n\n' +
       'Cordialmente,\n\n*Equipo de Contabilidad*\n> Alcaldía de Flandes'
     );
   }
