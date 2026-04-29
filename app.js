@@ -716,7 +716,7 @@ if (ORDEN_MODE !== 'EMISION') {
         const mensaje =
           'Buen día *' + nombre + '*\n' +
           '⚠ Tu cuenta *' + informe + '* con fecha de radicación *' + radicacion + '* está próxima a vencer por cierre de mes ⚠\n\n' +
-          '*Debes radicar tus 2 paquetes en la Oficina de contratación el día de hoy.*\n' +
+          '*La persona encargada en tu secretaría, Debe radicar los 2 paquetes de tu cuenta en la Oficina de contratación el día de hoy.*\n' +
           'Si ya están radicados, solicita amablemente a tu *supervisor(a) ' + supervisor + '* gestionar la radicación en nuestra oficina.\n\n' +
           'Si la cuenta vence, NO se podrá generar la Orden de pago en este mes.\n\n' +
           'Cordialmente,\n\n' +
