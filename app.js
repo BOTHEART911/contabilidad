@@ -687,6 +687,55 @@ if (ORDEN_MODE !== 'EMISION') {
   header.appendChild(toggleBtn);
 }
 
+    // ✅ Botón AVISO DE VENCIMIENTO (solo en CREACION = CUENTAS PENDIENTES)
+    if (ORDEN_MODE !== 'EMISION') {
+      const avisoBtn = document.createElement('button');
+      avisoBtn.className = 'btn-icon orden-aviso';
+      avisoBtn.title = 'Enviar Aviso de Vencimiento';
+      avisoBtn.setAttribute('aria-label','Enviar aviso de vencimiento');
+      avisoBtn.innerHTML = '<img src="https://res.cloudinary.com/dqqeavica/image/upload/v1776287528/reloj_mnsqmb.png" alt="Aviso vencimiento">';
+
+      avisoBtn.addEventListener('click', ()=>{
+        playSoundOnce(SOUNDS.login);
+
+        const telNormalized = normalizeContratistaNumber(c.telefono);
+        if(!telNormalized){
+          Swal.fire({
+            icon:'warning',
+            title:'Sin teléfono válido',
+            text:'Este contratista no tiene un teléfono registrado válido.'
+          });
+          return;
+        }
+
+        const nombre      = c.nombre || '';
+        const informe     = c.informe || '';
+        const radicacion  = c.fechaRadicacion || '';
+        const supervisor  = c.supervisorCuenta || '';
+
+        const mensaje =
+          'Buen día *' + nombre + '*\n' +
+          '⚠ Tu cuenta *' + informe + '* con fecha de radicación *' + radicacion + '* está próxima a vencer por cierre de mes ⚠\n\n' +
+          '*Debes radicar tus 2 paquetes en la Oficina de contratación el día de hoy.*\n' +
+          'Si ya están radicados, solicita amablemente a tu *supervisor(a) ' + supervisor + '* gestionar la radicación en nuestra oficina.\n\n' +
+          'Si la cuenta vence, NO se podrá generar la Orden de pago en este mes.\n\n' +
+          'Cordialmente,\n\n' +
+          '*Equipo de Contabilidad*\n' +
+          '> Alcaldía de Flandes';
+
+        sendBuilderbotMessage(telNormalized, mensaje);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Contratista Notificado',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      });
+
+      header.appendChild(avisoBtn);
+    }
+
     const pDoc=document.createElement('p');
     pDoc.className='item-sub';
     pDoc.textContent='CC / NIT: '+(c.documento||'');
