@@ -687,7 +687,7 @@ if (ORDEN_MODE !== 'EMISION') {
   header.appendChild(toggleBtn);
 }
 
-    // ✅ Botón AVISO DE VENCIMIENTO (solo en CREACION = CUENTAS PENDIENTES)
+   // ✅ Botón AVISO DE VENCIMIENTO (solo en CREACION = CUENTAS PENDIENTES)
     if (ORDEN_MODE !== 'EMISION') {
       const avisoBtn = document.createElement('button');
       avisoBtn.className = 'btn-icon orden-aviso';
@@ -698,36 +698,35 @@ if (ORDEN_MODE !== 'EMISION') {
       avisoBtn.addEventListener('click', ()=>{
         playSoundOnce(SOUNDS.login);
 
-        const telNormalized = normalizeContratistaNumber(c.telefono);
-        if(!telNormalized){
+        const grupoSupervisorId = String(c.contacto || '').trim();
+        if(!grupoSupervisorId){
           Swal.fire({
             icon:'warning',
-            title:'Sin teléfono válido',
-            text:'Este contratista no tiene un teléfono registrado válido.'
+            title:'Sin grupo',
+            text:'Este supervisor no tiene id de grupo (Columna F) asociado.'
           });
           return;
         }
 
-        const nombre      = c.nombre || '';
-        const informe     = c.informe || '';
-        const radicacion  = c.fechaRadicacion || '';
-        const supervisor  = c.supervisorCuenta || '';
+        const supervisor   = c.supervisorCuenta || '';
+        const informe      = c.informe || '';
+        const radicacion   = c.fechaRadicacion || '';
+        const contratista  = c.nombre || '';
 
         const mensaje =
-          'Buen día *' + nombre + '*\n' +
-          '⚠ Tu cuenta *' + informe + '* con fecha de radicación *' + radicacion + '* está próxima a vencer por cierre de mes ⚠\n\n' +
-          '*La persona encargada en tu secretaría, Debe radicar los 2 paquetes de tu cuenta en la Oficina de contratación el día de hoy.*\n' +
-          'Si ya están radicados, solicita amablemente a tu *supervisor(a) ' + supervisor + '* gestionar la radicación en nuestra oficina.\n\n' +
-          'Si la cuenta vence, NO se podrá generar la Orden de pago en este mes.\n\n' +
+          'Buen día *' + supervisor + '*\n' +
+          '⚠ La cuenta *' + informe + '* con fecha de radicación *' + radicacion + '* del contratista *' + contratista + '* está próxima a vencer por cierre de mes ⚠\n\n' +
+          '*Debes radicar sus 2 paquetes en la Oficina de contratación el día de hoy.*\n' +
+          'Si ya están radicados, solicita amablemente gestionar la radicación en nuestra oficina para poder realizar OP en este mes.\n\n' +
           'Cordialmente,\n\n' +
           '*Equipo de Contabilidad*\n' +
           '> Alcaldía de Flandes';
 
-        sendBuilderbotMessage(telNormalized, mensaje);
+        sendBuilderbotMessage(grupoSupervisorId, mensaje);
 
         Swal.fire({
           icon: 'success',
-          title: 'Contratista Notificado',
+          title: 'Supervisor Notificado',
           timer: 2000,
           showConfirmButton: false
         });
@@ -735,7 +734,7 @@ if (ORDEN_MODE !== 'EMISION') {
 
       header.appendChild(avisoBtn);
     }
-
+    
     const pDoc=document.createElement('p');
     pDoc.className='item-sub';
     pDoc.textContent='CC / NIT: '+(c.documento||'');
