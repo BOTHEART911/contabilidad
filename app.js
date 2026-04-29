@@ -717,7 +717,7 @@ if (ORDEN_MODE !== 'EMISION') {
           'Buen día *' + supervisor + '*\n' +
           '⚠ La cuenta *' + informe + '* con fecha de radicación *' + radicacion + '* del contratista *' + contratista + '* está próxima a vencer por cierre de mes ⚠\n\n' +
           '*Debes radicar sus 2 paquetes en la Oficina de contratación el día de hoy.*\n' +
-          'Si ya están radicados, solicita amablemente gestionar la radicación en nuestra oficina para poder realizar OP en este mes.\n\n' +
+          '> *Si ya están radicados*, solicita amablemente gestionar la radicación en nuestra oficina para poder realizar OP.\n\n' +
           'Cordialmente,\n\n' +
           '*Equipo de Contabilidad*\n' +
           '> Alcaldía de Flandes';
