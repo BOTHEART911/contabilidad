@@ -550,7 +550,7 @@ button:active {
 #cuentas-list .item-title           { margin: 0 !important; }
 #cuentas-list .item-header.orden-header + .item-sub { margin-top: 0 !important; padding-top: 0 !important; }
 #cuentas-list .item-sub             { margin: 0 !important; padding: 0 !important; line-height: 1.25 !important; }
-#cuentas-list .item-header.orden-header .item-title { padding-right: 70px !important; }
+#cuentas-list .item-header.orden-header .item-title { padding-right: 180px !important; }
 #cuentas-list .item-header.orden-header .orden-folder img {
   width: 46px !important; height: 46px !important;
   display: block !important; object-fit: contain !important;
@@ -709,4 +709,18 @@ button:active {
 .swal2-timer-progress-bar {
   background: linear-gradient(90deg, var(--primary-light), var(--primary)) !important;
   border-radius: 999px !important;
+}
+
+/* ============================================================
+   BOTÓN AVISO VENCIMIENTO (a la izquierda del GO/STOP)
+   ============================================================ */
+.item-card .item-header.orden-header .orden-aviso {
+  flex: 0 0 auto !important; margin: 0 !important; padding: 0 !important;
+  width: auto !important; position: absolute !important;
+  top: 14px !important; right: 124px !important;
+}
+#cuentas-list .item-header.orden-header .orden-aviso img {
+  width: 46px !important; height: 46px !important;
+  display: block !important; object-fit: contain !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.25)) !important;
 }
