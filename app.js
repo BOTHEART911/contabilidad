@@ -202,7 +202,6 @@ btnLogin.addEventListener('click', async () => {
     };
     playSoundOnce(SOUNDS.login);
     renderInicio();
-    updateEmisionButtonVisibility();
     showView('view-inicio');
   } catch (e) {
     Swal.fire({ icon:'error', title:'Error', text:e.message });
@@ -231,14 +230,7 @@ function formatoFechaHumana(date){
   return `${d}, ${dia} de ${mes} de ${y}`;
 }
 
-/* ================== PERMISOS EMISIÓN ================== */
-function updateEmisionButtonVisibility(){
-  const btn = document.getElementById('go-emision');
-  if(!btn) return;
-  const name = String(currentUser?.profesional || '').trim().toUpperCase();
-  const allowed = (name === 'OSCAR POLANIA' || name === 'CARLOS CUEVAS' || name === 'GLORIA HERRERA');
-  btn.classList.toggle('hidden', !allowed);
-}
+/* ================== (EMISIÓN eliminada) ================== */
 
 /* ================== NAVEGACIÓN PRINCIPAL ================== */
 document.getElementById('go-contratistas').addEventListener('click', async ()=>{
@@ -247,7 +239,7 @@ document.getElementById('go-contratistas').addEventListener('click', async ()=>{
   showView('view-contratistas');
 });
 
-let ORDEN_MODE = 'CREACION'; // 'CREACION' (CERRADA) | 'EMISION' (PRE-ORDEN)
+let ORDEN_MODE = 'CREACION'; // único modo: crear y emitir ORDEN DE PAGO en un solo paso
 
 document.getElementById('go-revision').addEventListener('click', async ()=>{
   playSoundOnce(SOUNDS.login);
@@ -258,24 +250,6 @@ document.getElementById('go-revision').addEventListener('click', async ()=>{
       icon:'success',
       title:'¡Estás al día!',
       text:'No tienes CUENTAS pendientes por Orden de Pago',
-      timer: 3200,
-      showConfirmButton: false
-    });
-    showView('view-inicio');
-    return;
-  }
-  showView('view-revision');
-});
-
-document.getElementById('go-emision').addEventListener('click', async ()=>{
-  playSoundOnce(SOUNDS.login);
-  ORDEN_MODE = 'EMISION';
-  await cargarCuentasPendientes(); // lista PRE-ORDEN
-  if (!CUENTAS_DATA || CUENTAS_DATA.length === 0){
-    await Swal.fire({
-      icon:'success',
-      title:'¡Sin pendientes!',
-      text:'No hay PRE-ORDENES pendientes por emitir.',
       timer: 3200,
       showConfirmButton: false
     });
@@ -556,12 +530,12 @@ async function mostrarDetallesContratista(documento){
 let CUENTAS_DATA=[];
 async function cargarCuentasPendientes(){
   try{
-    const estado = (ORDEN_MODE === 'EMISION') ? 'PRE-ORDEN' : 'CERRADA';
+    const estado = 'CERRADA';
     const list = await apiGet('listCuentasPorEstado', { estado });
     CUENTAS_DATA = Array.isArray(list) ? list : [];
 
     // Priorizar a OSCAR MAURICIO POLANIA GUERRA + ordenar por Fecha de Radicación (más antigua primero)
-    if (ORDEN_MODE === 'CREACION' || ORDEN_MODE === 'EMISION'){
+    {
       const PRIORITARIO = 'OSCAR MAURICIO POLANIA GUERRA';
 
       // Fecha de radicación en formato DD/MM/YYYY o DD-MM-YYYY
@@ -599,13 +573,8 @@ function configurarTituloOrdenes(){
   const caption = document.getElementById('cuentas-caption');
   if(!title || !caption) return;
 
-  if(ORDEN_MODE === 'EMISION'){
-    title.textContent = 'EMISIÓN - PRE-ORDENES PENDIENTES';
-    caption.textContent = 'N° de Pre-Ordenes Pendientes';
-  } else {
-    title.textContent = 'CUENTAS PENDIENTES DE ORDEN PAGO';
-    caption.textContent = 'N° de Cuentas Pendientes';
-  }
+  title.textContent = 'CUENTAS PENDIENTES DE ORDEN PAGO';
+  caption.textContent = 'N° de Cuentas Pendientes';
 }
 function actualizarResumenCuentas(list){
   const box=document.getElementById('cuentas-count');
@@ -625,11 +594,11 @@ function pintarCuentas(list){
 
   for(const c of list){
     const div=document.createElement('div');
-div.className='item-card';
+    div.className='item-card';
 
-// ✅ borde rojo si viene marcado desde backend (col DR)
-const isPend = String(c.pendiente || '').trim().toUpperCase() === 'PENDIENTE';
-if(isPend) div.classList.add('pending');
+    // ✅ borde rojo si viene marcado desde backend (col DR)
+    const isPend = String(c.pendiente || '').trim().toUpperCase() === 'PENDIENTE';
+    if(isPend) div.classList.add('pending');
 
     const header=document.createElement('div');
     header.className='item-header orden-header';
@@ -639,7 +608,7 @@ if(isPend) div.classList.add('pending');
     title.textContent= (c.nombre||'');
     header.appendChild(title);
 
-    // Ícono carpeta a BH (idCuenta) arriba a la derecha SIN desacomodar
+    // Ícono carpeta a BH (idCuenta) arriba a la derecha
     const folderBtn = document.createElement('button');
     folderBtn.className = 'btn-icon orden-folder';
     folderBtn.title = 'Abrir carpeta de CUENTA';
@@ -656,39 +625,35 @@ if(isPend) div.classList.add('pending');
     });
     header.appendChild(folderBtn);
 
+    // ✅ Botón GO/STOP (marcar / desmarcar PENDIENTE)
+    {
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'btn-icon orden-toggle';
+      toggleBtn.title = 'Marcar / Desmarcar PENDIENTE';
+      toggleBtn.setAttribute('aria-label','Marcar o desmarcar PENDIENTE');
 
-    // ✅ Botón GO/STOP (solo en vista CUENTAS PENDIENTES = modo CREACION)
-if (ORDEN_MODE !== 'EMISION') {
-  const toggleBtn = document.createElement('button');
-  toggleBtn.className = 'btn-icon orden-toggle';
-  toggleBtn.title = 'Marcar / Desmarcar PENDIENTE';
-  toggleBtn.setAttribute('aria-label','Marcar o desmarcar PENDIENTE');
+      const IMG_GO   = 'https://res.cloudinary.com/dqqeavica/image/upload/v1773101576/go_rsuqri.png';
+      const IMG_STOP = 'https://res.cloudinary.com/dqqeavica/image/upload/v1773101575/stop_beqe4k.webp';
 
-  const IMG_GO   = 'https://res.cloudinary.com/dqqeavica/image/upload/v1773101576/go_rsuqri.png';
-  const IMG_STOP = 'https://res.cloudinary.com/dqqeavica/image/upload/v1773101575/stop_beqe4k.webp';
+      toggleBtn.innerHTML = '<img src="' + (isPend ? IMG_STOP : IMG_GO) + '" alt="PENDIENTE">';
 
-  // estado inicial según backend
-  toggleBtn.innerHTML = '<img src="' + (isPend ? IMG_STOP : IMG_GO) + '" alt="PENDIENTE">';
+      toggleBtn.addEventListener('click', async ()=>{
+        playSoundOnce(SOUNDS.login);
+        const nextPend = !div.classList.contains('pending');
+        try{
+          await setCuentaPendiente(c.documento, c.informe, nextPend);
+          await cargarCuentasPendientes();
+          showView('view-revision');
+        }catch(e){
+          Swal.fire({ icon:'error', title:'Error', text: e.message });
+        }
+      });
 
-  toggleBtn.addEventListener('click', async ()=>{
-    playSoundOnce(SOUNDS.login);
-
-    const nextPend = !div.classList.contains('pending');
-    try{
-      await setCuentaPendiente(c.documento, c.informe, nextPend);
-      // refrescar para que vuelva a pintar borde rojo / imagen
-      await cargarCuentasPendientes();
-      showView('view-revision');
-    }catch(e){
-      Swal.fire({ icon:'error', title:'Error', text: e.message });
+      header.appendChild(toggleBtn);
     }
-  });
 
-  header.appendChild(toggleBtn);
-}
-
-   // ✅ Botón AVISO DE VENCIMIENTO (solo en CREACION = CUENTAS PENDIENTES)
-    if (ORDEN_MODE !== 'EMISION') {
+    // ✅ Botón AVISO DE VENCIMIENTO
+    {
       const avisoBtn = document.createElement('button');
       avisoBtn.className = 'btn-icon orden-aviso';
       avisoBtn.title = 'Enviar Aviso de Vencimiento';
@@ -734,7 +699,7 @@ if (ORDEN_MODE !== 'EMISION') {
 
       header.appendChild(avisoBtn);
     }
-    
+
     const pDoc=document.createElement('p');
     pDoc.className='item-sub';
     pDoc.textContent='CC / NIT: '+(c.documento||'');
@@ -756,63 +721,53 @@ if (ORDEN_MODE !== 'EMISION') {
     pSup.className='item-sub';
     pSup.textContent='SUPERVISOR: '+(c.supervisorCuenta||'');
 
-    // ✅ NUEVO: FECHA DE RADICACIÓN (col F) rojo + latido
+    // ✅ FECHA DE RADICACIÓN (col F) rojo + latido
     const pRad=document.createElement('p');
     pRad.className='item-sub pulse-red';
     pRad.textContent='FECHA DE RADICACIÓN: '+(c.fechaRadicacion||'');
 
-    // ✅ NUEVO: Input requerido N° ORDEN (6 dígitos exactos)
-     let labelOrden = null;
-    let inputOrden = null;
+    // ✅ N° ORDEN DE PAGO (Dígitos finales) -> se guarda 2026 + 6 dígitos (10 en total)
+    const labelOrden = document.createElement('label');
+    labelOrden.textContent = 'N° ORDEN DE PAGO (Dígitos finales)';
 
-    if (ORDEN_MODE !== 'EMISION') {
-      labelOrden = document.createElement('label');
-      labelOrden.textContent = 'N° ORDEN DE PAGO (6 dígitos)';
+    const inputOrden = document.createElement('input');
+    inputOrden.className = 'op-input';
+    inputOrden.type = 'text';
+    inputOrden.inputMode = 'numeric';
+    inputOrden.autocomplete = 'off';
+    inputOrden.placeholder = 'Dígitos finales';
+    inputOrden.maxLength = 6;
+    inputOrden.value = String(c.ordenPago || '');
 
-      inputOrden = document.createElement('input');
-      inputOrden.className = 'op-input';
-      inputOrden.type = 'text';
-      inputOrden.inputMode = 'numeric';
-      inputOrden.autocomplete = 'off';
-      inputOrden.placeholder = '000000';
-      inputOrden.maxLength = 6;
-      inputOrden.value = String(c.ordenPago || '');
+    inputOrden.addEventListener('input', ()=>{
+      let v = String(inputOrden.value || '').replace(/\D/g,'').slice(0,6);
+      inputOrden.value = v;
+      c.ordenPago = v; // guardar dígitos finales en memoria
+    });
 
-      inputOrden.addEventListener('input', ()=>{
-        // solo dígitos
-        let v = String(inputOrden.value || '').replace(/\D/g,'').slice(0,6);
-        inputOrden.value = v;
-        c.ordenPago = v; // guardar en memoria (para el flujo)
-      });
-    }
+    // ✅ Campo PDF "Orden de pago" (subir / visualizar / reemplazar antes de guardar, máx 5 MB)
+    const pdfField = construirCampoPdf(c);
 
     const btnRow=document.createElement('div');
     btnRow.className='btn-row';
 
     const btnAccion=document.createElement('button');
-    btnAccion.textContent = (ORDEN_MODE === 'EMISION') ? 'EMITIR' : 'ORDEN CREADA';
-btnAccion.addEventListener('click', async ()=>{
+    btnAccion.textContent = 'ORDEN CREADA';
+    btnAccion.addEventListener('click', async ()=>{
       playSoundOnce(SOUNDS.login);
 
-      // ✅ SOLO pedir N° ORDEN en modo CREACIÓN (CERRADA)
-      if (ORDEN_MODE !== 'EMISION') {
-        const op = String(c.ordenPago || '').trim();
-        if(!/^\d{6}$/.test(op)){
-          Swal.fire({
-            icon:'warning',
-            title:'N° ORDEN DE PAGO requerido',
-            text:'Debes ingresar exactamente 6 dígitos (ej: 000118).'
-          });
-          if (inputOrden) inputOrden.focus();
-          return;
-        }
+      const finales = String(c.ordenPago || '').replace(/\D/g,'').trim();
+      if(!finales || finales.length > 6){
+        Swal.fire({
+          icon:'warning',
+          title:'N° ORDEN DE PAGO requerido',
+          text:'Ingresa los dígitos finales (de 1 a 6 dígitos). Ej: 906 → 2026000906.'
+        });
+        if (inputOrden) inputOrden.focus();
+        return;
       }
 
-      if(ORDEN_MODE === 'EMISION'){
-        await emitirOrdenPagoFlow(c);
-      }else{
-        await crearPreOrdenFlow(c);
-      }
+      await guardarOrdenPagoFlow(c);
     });
     btnRow.appendChild(btnAccion);
 
@@ -822,19 +777,106 @@ btnAccion.addEventListener('click', async ()=>{
     div.appendChild(pInf);
     div.appendChild(pFactura);
     div.appendChild(pSup);
-
-     // ✅ justo después de SUPERVISOR:
     div.appendChild(pRad);
 
-    // ✅ mostrar N° ORDEN solo en CREACIÓN
-    if (ORDEN_MODE !== 'EMISION') {
-      div.appendChild(labelOrden);
-      div.appendChild(inputOrden);
-    }
+    // N° ORDEN + campo PDF (antes del botón ORDEN CREADA)
+    div.appendChild(labelOrden);
+    div.appendChild(inputOrden);
+    div.appendChild(pdfField);
 
     div.appendChild(btnRow);
     wrap.appendChild(div);
   }
+}
+
+/* ================== CAMPO PDF "ORDEN DE PAGO" ================== */
+function construirCampoPdf(c){
+  const box = document.createElement('div');
+  box.className = 'pdf-field';
+  box.style.marginTop = '8px';
+
+  const lbl = document.createElement('label');
+  lbl.textContent = 'Orden de pago (PDF)';
+  box.appendChild(lbl);
+
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/pdf';
+  input.style.display = 'none';
+
+  const info = document.createElement('p');
+  info.className = 'item-sub';
+  info.style.margin = '4px 0';
+  // Restaurar estado si ya se había cargado un PDF en esta tarjeta
+  if(c._pdfData){
+    info.textContent = '📎 ' + (c._pdfName || 'archivo.pdf');
+  }else{
+    info.textContent = 'Sin archivo (máx. 5 MB)';
+  }
+
+  const row = document.createElement('div');
+  row.className = 'btn-row';
+
+  const btnSubir = document.createElement('button');
+  btnSubir.type = 'button';
+  btnSubir.className = 'btn-primary';
+  btnSubir.textContent = c._pdfData ? 'Reemplazar PDF' : 'Subir Orden de pago';
+
+  const btnVer = document.createElement('button');
+  btnVer.type = 'button';
+  btnVer.className = 'btn-primary';
+  btnVer.textContent = 'Ver';
+  btnVer.style.display = c._pdfData ? '' : 'none';
+
+  btnSubir.addEventListener('click', ()=> input.click());
+
+  btnVer.addEventListener('click', ()=>{
+    if(!c._pdfData) return;
+    try{
+      const bin = atob(c._pdfData);
+      const len = bin.length;
+      const bytes = new Uint8Array(len);
+      for(let i=0;i<len;i++) bytes[i] = bin.charCodeAt(i);
+      const blob = new Blob([bytes], {type:'application/pdf'});
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setTimeout(()=>URL.revokeObjectURL(url), 60000);
+    }catch(e){
+      Swal.fire({icon:'error',title:'No se pudo abrir',text:e.message});
+    }
+  });
+
+  input.addEventListener('change', ()=>{
+    const file = input.files && input.files[0];
+    if(!file) return;
+    if(file.type !== 'application/pdf'){
+      Swal.fire({icon:'warning',title:'Formato inválido',text:'Solo se permite PDF.'});
+      input.value=''; return;
+    }
+    if(file.size > 5 * 1024 * 1024){
+      Swal.fire({icon:'warning',title:'Archivo muy grande',text:'El PDF no debe superar 5 MB.'});
+      input.value=''; return;
+    }
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const result = String(reader.result || '');
+      c._pdfData = result.replace(/^data:application\/pdf;base64,/,'');
+      c._pdfName = file.name || ('ORDEN DE PAGO.pdf');
+      info.textContent = '📎 ' + c._pdfName + ' (' + (file.size/1024/1024).toFixed(2) + ' MB)';
+      btnVer.style.display = '';
+      btnSubir.textContent = 'Reemplazar PDF';
+    };
+    reader.onerror = ()=> Swal.fire({icon:'error',title:'Error leyendo el archivo'});
+    reader.readAsDataURL(file);
+  });
+
+  row.appendChild(btnSubir);
+  row.appendChild(btnVer);
+
+  box.appendChild(input);
+  box.appendChild(info);
+  box.appendChild(row);
+  return box;
 }
   
 document.getElementById('cuentas-filter').addEventListener('input',()=>{
@@ -862,85 +904,62 @@ document.getElementById('revision-volver').addEventListener('click', ()=>{
   showView('view-inicio');
 });
 
-/* ================== FLOW 1: CREAR PRE-ORDEN ================== */
-async function crearPreOrdenFlow(c){
-  const nombre = c.nombre || '';
-  const informe = c.informe || '';
-
-  // ✅ N° orden (6 dígitos) -> mostrar con prefijo 2026 en resumen
-  const orden6 = String(c.ordenPago || '').trim();
-  if(!/^\d{6}$/.test(orden6)){
-    Swal.fire({
-      icon:'warning',
-      title:'N° ORDEN DE PAGO requerido',
-      text:'Debes ingresar exactamente 6 dígitos (ej: 000118).'
-    });
-    return;
-  }
-const ordenFull = '2026' + orden6;
-
-  const rs = await Swal.fire({
-    icon:'success',
-    title:`Cuenta N° ${informe} de ${nombre}`,
-    html:
-  `<div style="text-align:center; font-weight:900; line-height:1.4">`+
-  `<div style="font-size:1.05rem; margin-top:6px;"><b>N° ORDEN DE PAGO</b></div>`+
-  `<div style="color:#06402B; font-size:1.25rem; letter-spacing:2px;">${ordenFull}</div>`+
-  `</div>`,
-    showCancelButton:true,
-    confirmButtonText:'GUARDAR ORDEN',
-    cancelButtonText:'Cancelar'
-  });
-
-  if(!rs.isConfirmed) return;
-
-  try{
-    await apiPost('crearPreOrden', {
-      documento: c.documento,
-      informe: c.informe,
-      responsable: currentUser?.profesional || '',
-      ordenPago: ordenFull // ✅ NUEVO: se envía al backend
-    });
-
-    Swal.fire({icon:'success',title:'Pre-Orden creada',timer:1600,showConfirmButton:false});
-
-    await cargarCuentasPendientes();
-    showView('view-revision');
-  }catch(e){
-    Swal.fire({icon:'error',title:'Error',text:e.message});
-  }
-}
-
-/* ================== FLOW 2: EMITIR ORDEN DE PAGO ================== */
-async function emitirOrdenPagoFlow(c){
+/* ================== FLUJO ÚNICO: GUARDAR ORDEN DE PAGO ================== */
+/* Antes eran dos pasos (PRE-ORDEN + EMISIÓN). Ahora "ORDEN CREADA" hace todo:
+   - Sube el PDF a la carpeta BH (idCuenta)
+   - Cambia el estado a ORDEN DE PAGO y registra en hoja ORDENES
+   - Envía los mensajes de WhatsApp (contratista + tesorería) */
+async function guardarOrdenPagoFlow(c){
   const documento = c.documento;
   const nombre = c.nombre || '';
   const informe = c.informe || '';
 
-  const telContratistaRaw = c.telefono || '';
-  const telContratista = normalizeContratistaNumber(telContratistaRaw);
+  // ✅ N° orden: dígitos finales -> 2026 + 6 dígitos (10 en total)
+  const finales = String(c.ordenPago || '').replace(/\D/g,'').trim();
+  if(!finales || finales.length > 6){
+    Swal.fire({
+      icon:'warning',
+      title:'N° ORDEN DE PAGO requerido',
+      text:'Ingresa los dígitos finales (de 1 a 6 dígitos). Ej: 906 → 2026000906.'
+    });
+    return;
+  }
+  const ordenFull = '2026' + finales.padStart(6, '0');
 
-  const TESORERIA_GROUP_ID = 'KQyQKkptgOI56Qbn6gsJUh'; /*Grupo de tesorería*/
+  // ✅ PDF requerido
+  if(!c._pdfData){
+    Swal.fire({
+      icon:'warning',
+      title:'Orden de pago (PDF) requerida',
+      text:'Debes subir el archivo PDF de la Orden de pago antes de guardar.'
+    });
+    return;
+  }
 
-  const rs = await Swal.fire({
-    icon:'success',
-    title:`Pre-Orden N° ${informe} de ${nombre}`,
-    text:'¿Deseas EMITIR la Orden de Pago?',
-    showCancelButton:true,
-    confirmButtonText:'EMITIR',
-    cancelButtonText:'Cancelar'
-  });
+  // ✅ Carpeta BH (idCuenta) requerida para guardar el PDF
+  const idCuenta = String(c.idCuenta || '').trim();
+  if(!idCuenta){
+    Swal.fire({
+      icon:'warning',
+      title:'Sin carpeta (BH)',
+      text:'Esta cuenta no tiene id de carpeta (BH) asociado para guardar el PDF.'
+    });
+    return;
+  }
+
+  // ✅ WhatsApp (lo que antes hacía EMISIÓN)
+  const telContratista = normalizeContratistaNumber(c.telefono || '');
+  const TESORERIA_GROUP_ID = 'KQyQKkptgOI56Qbn6gsJUh'; /* Grupo de tesorería */
 
   function msgOrdenPagoContratista(){
     return (
       '> Estado 4️⃣\n' +
       'Estimado(a) *'+nombre+'*\n\n' +
-      '¡Ha sido emitada la orden de pago de tu *Cuenta N° '+informe+'*\n' +
-      'El equipo de *Tesoría* en sus tiempos, revisará para generar el Egreso y Pago de tus honorarios.\n\n' +
+      '¡Ha sido emitida la orden de pago de tu *Cuenta N° '+informe+'*\n' +
+      'El equipo de *Tesorería* en sus tiempos, revisará para generar el Egreso y Pago de tus honorarios.\n\n' +
       'Cordialmente,\n\n*Equipo de Contabilidad*\n> Alcaldía de Flandes'
     );
   }
-
   function msgOrdenPagoTesoreria(){
     return (
       'Estimado Equipo de Tesorería\n\n' +
@@ -950,23 +969,41 @@ async function emitirOrdenPagoFlow(c){
     );
   }
 
+  const rs = await Swal.fire({
+    icon:'success',
+    title:`Cuenta N° ${informe} de ${nombre}`,
+    html:
+      `<div style="text-align:center; font-weight:900; line-height:1.4">`+
+      `<div style="font-size:1.05rem; margin-top:6px;"><b>N° ORDEN DE PAGO</b></div>`+
+      `<div style="color:#06402B; font-size:1.25rem; letter-spacing:2px;">${ordenFull}</div>`+
+      `<div style="font-size:.9rem; margin-top:8px;">📎 ${c._pdfName || 'Orden de pago.pdf'}</div>`+
+      `</div>`,
+    showCancelButton:true,
+    confirmButtonText:'GUARDAR ORDEN',
+    cancelButtonText:'Cancelar'
+  });
+
   if(!rs.isConfirmed) return;
 
   try{
-    // Backend SOLO actualiza estados (CUENTAS BJ -> ORDEN DE PAGO y ORDENES F -> EMITIDO)
-    await apiPost('emitirOrdenPagoV2', {
-      documento,
-      informe,
-      responsable: currentUser?.profesional || ''
+    await apiPost('crearOrdenPago', {
+      documento: c.documento,
+      informe: c.informe,
+      responsable: currentUser?.profesional || '',
+      ordenPago: ordenFull,
+      idCuenta: idCuenta,
+      pdfBase64: c._pdfData,
+      pdfNombre: c._pdfName || ('ORDEN DE PAGO ' + ordenFull + '.pdf')
     });
 
-    // Envío WhatsApp SOLO desde aquí (como lo querías)
+    // Envío WhatsApp (igual que antes hacía EMISIÓN)
     if(telContratista){
       sendBuilderbotMessage(telContratista, msgOrdenPagoContratista());
     }
     sendBuilderbotMessage(TESORERIA_GROUP_ID, msgOrdenPagoTesoreria());
 
-    Swal.fire({icon:'success',title:'Orden de Pago Emitida',timer:1800,showConfirmButton:false});
+    Swal.fire({icon:'success',title:'Orden de Pago creada',timer:1800,showConfirmButton:false});
+
     await cargarCuentasPendientes();
     showView('view-revision');
   }catch(e){
